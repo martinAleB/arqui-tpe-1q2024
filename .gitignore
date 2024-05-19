@@ -12,3 +12,5 @@
 
 #Bash history
 .bash_history
+
+*.elf
