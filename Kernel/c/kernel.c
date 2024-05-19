@@ -3,6 +3,7 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <keyboardDriver.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -99,6 +100,11 @@ int main()
 	ncPrint((char*)sampleDataModuleAddress);
 	ncNewline();
 
+	ncClear();
+
+	getKey();
+
+	ncNewline();
 	ncPrint("[Finished]");
 	return 0;
 }
