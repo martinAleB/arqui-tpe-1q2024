@@ -1,5 +1,6 @@
 #include <keyboardDriver.h>
 #include <lib.h>
+#include <videoDriver.h>
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
@@ -100,7 +101,8 @@ char isSpecialKey(unsigned int key)
 void getKey()
 {
 
-	ncPrint("Press ESC to exit Text.");
+	//ncPrint("Press ESC to exit Text.");
+	consolePrintString("Press ESC to exit Text.", LARGE_FONT, 0x00FFFFFF, 0x00000000);
 	ncNewline();
 	ncPrint("[Sample Text]: ");
 
