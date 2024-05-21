@@ -1,14 +1,14 @@
 #include <naiveConsole.h>
 
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+static uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
 
-static char buffer[64] = { '0' };
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
+static char buffer[64] = {'0'};
+static uint8_t *const video = (uint8_t *)0xB8000;
+static uint8_t *currentVideo = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+static const uint32_t height = 25;
 
-void ncPrint(const char * string)
+void ncPrint(const char *string)
 {
 	int i;
 
@@ -22,13 +22,26 @@ void ncPrintChar(char character)
 	currentVideo += 2;
 }
 
+uint64_t ncNPrintStyled(const char *string, uint8_t style, uint64_t N)
+{
+	uint64_t i;
+	for (i = 0; i < N && string[i] != 0; i++)
+		ncPrintCharStyled(string[i], style);
+	return i;
+}
+
+void ncPrintCharStyled(char character, uint8_t style)
+{
+	*currentVideo++ = character;
+	*currentVideo++ = style;
+}
+
 void ncNewline()
 {
 	do
 	{
 		ncPrintChar(' ');
-	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	} while ((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
 void ncPrintDec(uint64_t value)
@@ -48,8 +61,8 @@ void ncPrintBin(uint64_t value)
 
 void ncPrintBase(uint64_t value, uint32_t base)
 {
-    uintToBase(value, buffer, base);
-    ncPrint(buffer);
+	uintToBase(value, buffer, base);
+	ncPrint(buffer);
 }
 
 void ncClear()
@@ -61,32 +74,32 @@ void ncClear()
 	currentVideo = video;
 }
 
-//For Testing
-void ncDelete(){
+// For Testing
+void ncDelete()
+{
 	currentVideo -= 2;
 	ncPrintChar(' ');
 	currentVideo -= 2;
 }
 
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
+static uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base)
 {
 	char *p = buffer;
 	char *p1, *p2;
 	uint32_t digits = 0;
 
-	//Calculate characters for each digit
+	// Calculate characters for each digit
 	do
 	{
 		uint32_t remainder = value % base;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 		digits++;
-	}
-	while (value /= base);
+	} while (value /= base);
 
 	// Terminate string in buffer.
 	*p = 0;
 
-	//Reverse string in buffer.
+	// Reverse string in buffer.
 	p1 = buffer;
 	p2 = p - 1;
 	while (p1 < p2)

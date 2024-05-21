@@ -17,6 +17,7 @@ GLOBAL _irq60Handler
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
+EXTERN syscallDispatcher
 EXTERN exceptionDispatcher
 
 SECTION .text
@@ -141,7 +142,15 @@ _irq05Handler:
 
 ;System calls
 _irq60Handler:
-	ret
+	pushState
+	mov rdi, rax
+	mov rsi, rbx
+	push rdx		; swap entre
+	mov rdx, rcx	; los registros
+	pop rcx			; rcx y rdx
+	call syscallDispatcher
+	popState
+	iretq
 
 ;Zero Division Exception
 _exception0Handler:

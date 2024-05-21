@@ -1,17 +1,23 @@
 #include <time.h>
 #include <stdint.h>
 
-static void int_20();
+typedef void (*functionsArray[])();
 
-void irqDispatcher(uint64_t irq) {
-	switch (irq) {
-		case 0:
-			int_20();
-			break;
-	}
+static void int_20();
+static void int_21();
+
+void irqDispatcher(uint64_t irq)
+{
+	functionsArray functions = {int_20, int_21};
+	functions[irq]();
 	return;
 }
 
-void int_20() {
+void int_20()
+{
 	timer_handler();
+}
+
+void int_21()
+{
 }

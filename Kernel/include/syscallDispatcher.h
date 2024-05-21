@@ -1,0 +1,16 @@
+#ifndef SYSCALLS_DISPATCHER_H
+#define SYSCALLS_DISPATCHER_H
+
+#include <stdint.h>
+
+typedef enum
+{
+    STDOUT = 1,
+    STDERR
+} FileDescriptor;
+
+uint64_t syscallDispatcher(uint64_t id, ...);
+uint64_t read(FileDescriptor fd, char *buffer, uint64_t count);
+uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count);
+
+#endif
