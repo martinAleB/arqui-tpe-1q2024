@@ -2,6 +2,7 @@
 #include <naiveConsole.h>
 #include <stdarg.h>
 #include <keyboardDriver.h>
+#include <videoDriver.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -32,6 +33,6 @@ uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
 }
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
 {
-    uint8_t styleByFileDescriptor[] = {0, 0x07, 0x04};
-    return ncNPrintStyled(buffer, styleByFileDescriptor[fd], count);
+    uint32_t styleByFileDescriptor[] = {0, 0x00FFFFFF, 0x00FF0000};
+    return vdNPrintStyled(buffer, styleByFileDescriptor[fd],0, count);
 }

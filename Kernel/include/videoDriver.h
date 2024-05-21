@@ -41,9 +41,19 @@ void ncDelete();
 
 unsigned char *getCharHexData(uint8_t c);
 uint8_t *getLargeCharHexData(uint8_t c);
-void consolePrintString(char* s, uint8_t size, uint32_t color, uint32_t bgColor);
-void clear();
-void rainbowPrint(char *s);
+void vdPrint(const char *string);
+void vdPrintChar(char character);
+void vdPrintCharStyled(char character, uint32_t color, uint32_t bgColor);
+void vdPrintStyled(char* s, uint32_t color, uint32_t bgColor);
+uint64_t vdNPrintStyled(const char *string, uint32_t color, uint32_t bgColor, uint64_t N);
+void vdNewline();
+void vdPrintDec(uint64_t value);
+void vdPrintHex(uint64_t value);
+void vdPrintBin(uint64_t value);
+void vdPrintBase(uint64_t value, uint32_t base);
+void vdClear();
+void vdDelete();
+void vdChangeFontSize();
 void drawRectangle( uint32_t color, uint16_t up_l_x, uint16_t up_l_y, uint16_t lo_r_x, uint16_t lo_r_y);
 
 #endif

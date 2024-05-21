@@ -4,7 +4,6 @@
 #include <font.h>
 
 	/// character bitmap for each encoding
-	//saque const
 static unsigned char spleen8x16[] = {
 //  32 $20 'SPACE'
 //	width 8, bbx 0, bby -4, bbw 8, bbh 16

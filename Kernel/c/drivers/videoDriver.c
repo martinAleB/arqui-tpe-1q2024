@@ -1,11 +1,13 @@
 #include <stdint.h>
 #include <font.h>
-//#include <stdio.h>
 #include <videoDriver.h>
 
 
 unsigned int position; //ver despues si prefiero x e y
 unsigned int x=0,y=0;
+uint8_t size = SMALL_FONT;
+
+static uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -49,6 +51,9 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
+
+
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
@@ -56,13 +61,15 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+1]   =  (hexColor >> 8) & 0xFF; 
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
-void charWrite(uint8_t c, uint32_t color, uint32_t bgColor, uint8_t size);
 
+void vdPrint(const char* string){
+	while (*string) vdPrintChar(*string++);
+}
 
- void clear(){
-	for (int i = 0 ; i < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS; i ++) putPixel(0, i%SCREEN_WIDTH_PIXELS, i/SCREEN_WIDTH_PIXELS);
-	x=y=0;
- }
+void vdPrintChar(char character){
+	vdPrintCharStyled(character,0x00FFFFFF, 0);
+}
+
 /**
 * charWrite -->> recibe un caracter, printea as-is en la ubicacion correspondiente
 * como en las fuentes de 16x32 tengo 2 chars (representando 16 pixeles) para cada linea horizontal de la fuente
@@ -70,7 +77,8 @@ void charWrite(uint8_t c, uint32_t color, uint32_t bgColor, uint8_t size);
 * es posible usar el size como modificador dado que LARGE_FONT tiene exactamente el doble de pixeles
 * de alto y de ancho que SMALL_FONT asi que los pixeles a dibujar seran el doble en cada dimension en cada caracter
 **/	
-void charWrite(uint8_t c, uint32_t color, uint32_t bgColor, uint8_t size){ //faltan casos especiales de /n y eso -->> meter en putchar
+void vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor){ //faltan casos especiales de /n y eso -->> meter en putchar
+	//int size = LARGE_FONT;
 	unsigned char *hexData;
 	if (size == 1)  hexData= getCharHexData(c);
 	else hexData = getLargeCharHexData(c);
@@ -78,7 +86,7 @@ void charWrite(uint8_t c, uint32_t color, uint32_t bgColor, uint8_t size){ //fal
 		for (int j=0;j<HEIGHT_S*size;j++){
 			//0x80 es un bit en el lugar mas significativo, voy corriendolo hacia la derecha para compararlo con cada pixel a dibujar
 			//1 representa que hay un pixel, 0 que no lo hay 
-			uint8_t isPresent = color*(hexData[size*j + i/8] & (0x80 >> i%8 ));
+			uint8_t isPresent = (hexData[size*j + i/8] & (0x80 >> i%8 ));
 			putPixel(isPresent?color:bgColor, (x+MARGIN_SIZE)*WIDTH_S*size+i, j+size*HEIGHT_S*(y)+size*MARGIN_SIZE*HEIGHT_S/2);
 		}
 	}
@@ -87,6 +95,57 @@ void charWrite(uint8_t c, uint32_t color, uint32_t bgColor, uint8_t size){ //fal
 	if (++x==(SCREEN_WIDTH_PIXELS/(size*WIDTH_S)-2*MARGIN_SIZE)){y++;x=0;}
 
 }
+
+void vdPrintStyled(char* string, uint32_t color, uint32_t bgColor){
+	while (*string) vdPrintCharStyled(*string++,color,bgColor);
+}
+
+uint64_t vdNPrintStyled(const char *string, uint32_t color, uint32_t bgColor, uint64_t N){
+	uint64_t i;
+	for (i = 0; i < N && string[i] != 0; i++)
+		vdPrintCharStyled(string[i], color, bgColor);
+	return i;
+}
+//TODO CHEQUEO AL FINAL PARA WRAPAROUND?
+void vdNewline(){
+	y++;
+	x=0;
+}
+void vdPrintDec(uint64_t value)
+{
+	vdPrintBase(value, 10);
+}
+
+void vdPrintHex(uint64_t value)
+{
+	vdPrintBase(value, 16);
+}
+
+void vdPrintBin(uint64_t value)
+{
+	vdPrintBase(value, 2);
+}
+//TODO VER SI ESTE BUFFER LO SACAMOS DE OTRO LADO
+void vdPrintBase(uint64_t value, uint32_t base)
+{	char buffer[20];
+	uintToBase(value, buffer, base);
+	vdPrint(buffer);
+}
+
+void vdClear(){
+	for (int i = 0 ; i < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS; i ++) putPixel(0, i%SCREEN_WIDTH_PIXELS, i/SCREEN_WIDTH_PIXELS);
+	x=y=0;
+ }
+void vdDelete(){//pensar si lo schequeos van aca o en el keyboard driver
+	x--;
+	vdPrintChar(' ');
+	x--;
+}
+void vdChangeFontSize(){
+	if(size == SMALL_FONT) size=LARGE_FONT;else size=SMALL_FONT;
+}
+
+
 
 void drawRectangle(uint32_t color,uint16_t up_l_x, uint16_t up_l_y, uint16_t lo_r_x, uint16_t lo_r_y){
 	//chequeos para no hacer boludeces
@@ -97,9 +156,6 @@ void drawRectangle(uint32_t color,uint16_t up_l_x, uint16_t up_l_y, uint16_t lo_
 	}
 }
 
-void consolePrintString(char* s, uint8_t size, uint32_t color, uint32_t bgColor){
-	if(size==SMALL_FONT||size==LARGE_FONT)while(*s)charWrite(*s++, color, bgColor, size);
-}
 
 
 

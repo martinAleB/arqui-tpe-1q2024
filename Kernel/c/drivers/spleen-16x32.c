@@ -3,7 +3,6 @@
 
 #include <font.h>
 #include <stdint.h>
-
 	/// character bitmap for each encoding
 static unsigned char spleen16x32[] = {
 //  32 $20 'SPACE'
