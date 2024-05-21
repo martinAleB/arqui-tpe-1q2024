@@ -3,8 +3,10 @@
 
 #include <stdint.h>
 
-void ncPrint(const char * string);
+void ncPrint(const char *string);
 void ncPrintChar(char character);
+uint64_t ncNPrintStyled(const char *string, uint8_t style, uint64_t N);
+void ncPrintCharStyled(char character, uint8_t style);
 void ncNewline();
 void ncPrintDec(uint64_t value);
 void ncPrintHex(uint64_t value);

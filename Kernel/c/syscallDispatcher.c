@@ -1,0 +1,31 @@
+#include <syscallDispatcher.h>
+#include <naiveConsole.h>
+#include <stdarg.h>
+
+uint64_t syscallDispatcher(uint64_t id, ...)
+{
+    va_list args;
+    va_start(args, id);
+    uint64_t ret;
+    switch (id)
+    {
+    case 3:;
+    case 4:;
+        FileDescriptor fd = va_arg(args, FileDescriptor);
+        char *buffer = va_arg(args, char *);
+        uint64_t count = va_arg(args, uint64_t);
+        if (id == 3)
+            ret = read(fd, buffer, count);
+        else
+            ret = write(fd, buffer, count);
+        break;
+    }
+    va_end(args);
+    return ret;
+}
+
+uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
+{
+    uint8_t styleByFileDescriptor[] = {0, 0x07, 0x04};
+    return ncNPrintStyled(buffer, styleByFileDescriptor[fd], count);
+}
