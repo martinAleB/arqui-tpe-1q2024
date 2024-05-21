@@ -1,6 +1,7 @@
 #include <syscallDispatcher.h>
 #include <naiveConsole.h>
 #include <stdarg.h>
+#include <keyboardDriver.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -24,6 +25,11 @@ uint64_t syscallDispatcher(uint64_t id, ...)
     return ret;
 }
 
+uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
+{
+    // @TODO: ver que onda stderr
+    return readBuffer(buffer, count);
+}
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
 {
     uint8_t styleByFileDescriptor[] = {0, 0x07, 0x04};

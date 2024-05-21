@@ -88,8 +88,6 @@ int main()
 	ncPrint("  Sample code module at 0x");
 	ncPrintHex((uint64_t)sampleCodeModuleAddress);
 	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
 	ncNewline();
 
@@ -103,11 +101,12 @@ int main()
 	ncClear();
 
 	getKey();
-
 	ncNewline();
 	ncPrint("[Finished]");
+	ncNewline();
 
-	while (1)
-		;
+	ncPrint("  Calling the sample code module returned: ");
+	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+
 	return 0;
 }
