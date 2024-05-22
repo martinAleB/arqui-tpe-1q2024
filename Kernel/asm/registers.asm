@@ -18,7 +18,6 @@ GLOBAL getR15
 section .text
 
 getRAX:
-	mov RAX,69
 	ret
 
 getRBX:
