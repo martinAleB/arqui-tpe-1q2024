@@ -92,7 +92,7 @@ getRBP:
 	push rbp
     mov rbp, rsp
 
-	mov RAX,[RBP + 8] ; xq se pusheo en el stack (y subo 8 xq son 64b)
+	mov RAX,[RBP + 8]
 
 	mov rsp, rbp
     pop rbp	
