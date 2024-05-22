@@ -1,5 +1,6 @@
 #include <keyboardDriver.h>
 #include <lib.h>
+#include <videoDriver.h>
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
@@ -98,11 +99,12 @@ char isSpecialKey(unsigned int key)
 }
 
 void getKey()
-{
-
-	ncPrint("Press ESC to exit Text.");
-	ncNewline();
-	ncPrint("[Sample Text]: ");
+{	
+	
+	vdNPrintStyled("Press ESC to exit Text.",0xFFFF00,0,50);
+	vdNewline();
+	vdChangeFontSize();
+	vdPrint("[Sample Text]: ");
 
 	unsigned int key;
 	int shift = 0;
@@ -131,14 +133,14 @@ void getKey()
 			capsLock = (capsLock + 1) % 2;
 			break;
 		case BACKSPACE:
-			ncDelete();
+			vdDelete();
 			break;
 		case ENTER:
-			ncNewline();
+			vdNewline();
 			break;
 		case TAB:
 			for (int i = 0; i < TAB_NUM; i++)
-				ncPrintChar(' ');
+				vdPrintChar(' ');
 			break;
 		}
 
@@ -153,10 +155,11 @@ void getKey()
 					if (capsLock == 1)
 						shifted = shifted ? 0 : 1;
 				}
-				ncPrintChar(keyValues[key][shifted]);
+				vdPrintChar(keyValues[key][shifted]);
 			}
 		}
 	}
+	vdClear();
 }
 
 uint64_t readBuffer(char *buffer, uint64_t count)
@@ -186,17 +189,17 @@ uint64_t readBuffer(char *buffer, uint64_t count)
 			if (it > 0)
 			{
 				it--;
-				ncDelete();
+				vdDelete();
 			}
 			break;
 		case ENTER:
-			ncNewline();
+			vdNewline();
 			isEnter = 1;
 			break;
 		case TAB:
 			for (int i = 0; i < TAB_NUM; i++)
 			{
-				ncPrintChar(' ');
+				vdPrintChar(' ');
 				if (it < count)
 					buffer[it++] = ' ';
 			}
@@ -214,7 +217,7 @@ uint64_t readBuffer(char *buffer, uint64_t count)
 					if (capsLock == 1)
 						shifted = shifted ? 0 : 1;
 				}
-				ncPrintChar(keyValues[key][shifted]);
+				vdPrintChar(keyValues[key][shifted]);
 				if (it < count)
 					buffer[it++] = keyValues[key][shifted];
 			}
