@@ -142,14 +142,18 @@ _irq05Handler:
 
 ;System calls
 _irq60Handler:
-	pushState
+	push rbx
+	push rdi
+	push rsi
 	mov rdi, rax
 	mov rsi, rbx
 	push rdx		; swap entre
 	mov rdx, rcx	; los registros
 	pop rcx			; rcx y rdx
 	call syscallDispatcher
-	popState
+	pop rsi
+	pop rdi
+	pop rbx
 	iretq
 
 ;Zero Division Exception

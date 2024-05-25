@@ -99,9 +99,9 @@ char isSpecialKey(unsigned int key)
 }
 
 void getKey()
-{	
-	
-	vdNPrintStyled("Press ESC to exit Text.",0xFFFF00,0,50);
+{
+
+	vdNPrintStyled("Press ESC to exit Text.", 0xFFFF00, 0, 50);
 	vdNewline();
 	vdChangeFontSize();
 	vdPrint("[Sample Text]: ");
