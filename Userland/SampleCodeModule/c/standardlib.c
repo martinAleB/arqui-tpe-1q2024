@@ -221,7 +221,6 @@ putChar(uint64_t character)
 uint8_t getChar()
 {
     char buff[1] = {0};
-    buff[0] = '\n';
     syscall(3, 1, 1, buff);
     return buff[0];
 }

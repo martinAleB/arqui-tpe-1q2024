@@ -4,7 +4,9 @@
 #include <naiveConsole.h>
 
 unsigned int getKeyPressed();
-void getKey();
+void writeIntoBuffer();
+unsigned char nextFromBuffer();
+/* void getKey();
 uint64_t readBuffer(char *buffer, uint64_t count);
-
+ */
 #endif

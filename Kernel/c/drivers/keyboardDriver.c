@@ -5,6 +5,7 @@
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
 #define TAB_NUM 4
+#define BUFFER_SIZE 1000
 
 // Define de teclas especiales:
 #define ESC 0x01
@@ -52,7 +53,7 @@ static unsigned char keyValues[KEYS][2] = {
 	{'p', 'P'},
 	{'[', '{'},
 	{']', '}'},
-	{13, 13},
+	{'\n', '\n'}, // por que habia 13, 13 antes?
 	{0, 0},
 	{'a', 'A'},
 	{'s', 'S'},
@@ -92,13 +93,60 @@ char isFKey(unsigned int key)
 
 char isSpecialKey(unsigned int key)
 {
-	return key == ESC || key == ENTER || key == BACKSPACE ||
-		   key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
-		   key == CAPS_LOCK_PRESS || key == TAB ||
-		   isFKey(key);
+	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
+		   key == CAPS_LOCK_PRESS || ALT_PRESS || isFKey(key);
 }
 
-void getKey()
+static char buffer[BUFFER_SIZE];
+static int currentKey = 0;
+
+void writeIntoBuffer()
+{
+	unsigned int key = getKeyPressed();
+	int shift = 0;
+	int capsLock = 0;
+
+	switch (key)
+	{
+	case R_SHIFT_PRESS:
+	case L_SHIFT_PRESS:
+		shift = 1;
+		break;
+	case R_SHIFT_RELEASE:
+	case L_SHIFT_RELEASE:
+		shift = 0;
+		break;
+	case CAPS_LOCK_PRESS:
+		capsLock = (capsLock + 1) % 2;
+		break;
+	}
+
+	if (key < MAX_PRESS_KEY)
+	{
+		if (!isSpecialKey(key))
+		{
+			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
+			{
+				if (capsLock == 1)
+					shift = shift ? 0 : 1;
+			}
+			buffer[currentKey++] = keyValues[key][shift];
+		}
+	}
+	else
+	{
+		buffer[currentKey++] = key;
+	}
+	currentKey %= BUFFER_SIZE;
+}
+
+unsigned char nextFromBuffer()
+{
+	unsigned char toRet = buffer[currentKey++];
+	currentKey %= BUFFER_SIZE;
+	return toRet;
+}
+/* void getKey()
 {
 
 	unsigned int key;
@@ -133,7 +181,7 @@ void getKey()
 	}
 
 	int shifted = shift;
-	
+
 	if (key < MAX_PRESS_KEY)
 	{
 		if (!isSpecialKey(key))
@@ -146,9 +194,9 @@ void getKey()
 			vdPrintChar(keyValues[key][shifted]);
 		}
 	}
-}
+} */
 
-uint64_t readBuffer(char *buffer, uint64_t count)
+/* uint64_t readBuffer(char *buffer, uint64_t count)
 {
 	uint16_t key;
 	uint8_t shift = 0;
@@ -210,4 +258,4 @@ uint64_t readBuffer(char *buffer, uint64_t count)
 		}
 	}
 	return it;
-}
+} */
