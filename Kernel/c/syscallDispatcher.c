@@ -3,9 +3,11 @@
 #include <stdarg.h>
 #include <keyboardDriver.h>
 #include <videoDriver.h>
+#include <interrupts.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
+    //picMasterMask(0xFF);
     va_list args;
     va_start(args, id);
     uint64_t ret;
@@ -23,6 +25,8 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     }
     va_end(args);
+
+    //picMasterMask(0xFD);
     return ret;
 }
 

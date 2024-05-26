@@ -101,65 +101,51 @@ char isSpecialKey(unsigned int key)
 void getKey()
 {
 
-	vdNPrintStyled("Press ESC to exit Text.", 0xFFFF00, 0, 50);
-	vdNewline();
-	vdChangeFontSize();
-	vdPrint("[Sample Text]: ");
-
 	unsigned int key;
 	int shift = 0;
 	int capsLock = 0;
 
-	while (1)
+	key = getKeyPressed();
+
+	switch (key)
 	{
-		key = getKeyPressed();
+	case R_SHIFT_PRESS:
+	case L_SHIFT_PRESS:
+		shift = 1;
+		break;
+	case R_SHIFT_RELEASE:
+	case L_SHIFT_RELEASE:
+		shift = 0;
+		break;
+	case CAPS_LOCK_PRESS:
+		capsLock = (capsLock + 1) % 2;
+		break;
+	case BACKSPACE:
+		vdDelete();
+		break;
+	case ENTER:
+		vdNewline();
+		break;
+	case TAB:
+		for (int i = 0; i < TAB_NUM; i++)
+			vdPrintChar(' ');
+		break;
+	}
 
-		// PARA TESTEAR, SALGO DEL TECLADO CON
-		// LA TECLA ESC
-		if (key == ESC)
-			break;
-
-		switch (key)
+	int shifted = shift;
+	
+	if (key < MAX_PRESS_KEY)
+	{
+		if (!isSpecialKey(key))
 		{
-		case R_SHIFT_PRESS:
-		case L_SHIFT_PRESS:
-			shift = 1;
-			break;
-		case R_SHIFT_RELEASE:
-		case L_SHIFT_RELEASE:
-			shift = 0;
-			break;
-		case CAPS_LOCK_PRESS:
-			capsLock = (capsLock + 1) % 2;
-			break;
-		case BACKSPACE:
-			vdDelete();
-			break;
-		case ENTER:
-			vdNewline();
-			break;
-		case TAB:
-			for (int i = 0; i < TAB_NUM; i++)
-				vdPrintChar(' ');
-			break;
-		}
-
-		int shifted = shift;
-
-		if (key < MAX_PRESS_KEY)
-		{
-			if (!isSpecialKey(key))
+			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
 			{
-				if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
-				{
-					if (capsLock == 1)
-						shifted = shifted ? 0 : 1;
-				}
-				vdPrintChar(keyValues[key][shifted]);
+				if (capsLock == 1)
+					shifted = shifted ? 0 : 1;
 			}
+			vdPrintChar(keyValues[key][shifted]);
 		}
 	}
-	vdClear();
 }
 
 uint64_t readBuffer(char *buffer, uint64_t count)

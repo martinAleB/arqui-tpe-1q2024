@@ -1,5 +1,7 @@
 #include <time.h>
 #include <stdint.h>
+#include <videoDriver.h>
+#include <keyboardDriver.h>
 
 typedef void (*functionsArray[])();
 
@@ -18,6 +20,10 @@ void int_20()
 	timer_handler();
 }
 
+
 void int_21()
 {
+
+	getKey();
+	
 }

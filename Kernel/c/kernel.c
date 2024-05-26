@@ -108,5 +108,7 @@ int main()
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 
+	while(1);
+
 	return 0;
 }
