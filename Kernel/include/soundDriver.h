@@ -5,6 +5,6 @@
 
 uint8_t inb(uint8_t a);
 void outb(uint8_t a, uint8_t b);
-void beep(int seconds);
+void beep(int ticks);
 
 #endif
