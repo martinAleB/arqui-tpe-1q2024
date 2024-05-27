@@ -94,7 +94,7 @@ uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 	if (c == '\t')
 	{
 		vdPrint("    ");
-		return 1;
+		return 4;
 	}
 
 	if (c <= 31)
