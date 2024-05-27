@@ -157,15 +157,36 @@ uint64_t scanf(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
 
-    char buff[MAX_CHARS] = {0};
-    uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
+    //char buff[MAX_CHARS] = {0};
+    //uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
 
+    char buffer[MAX_CHARS] = {0};
+    char auxBuffer[100] = {0};
     uint64_t i, j, count_read;
     uint8_t *char_dir;
     int32_t *int_dir;
+    char c;
+
+    //Primero tengo que  ir pidiendo los caracteres hasta el enter y guardarlos en un buffer, asi como imprimirlos
+    int buffSize = 0;
+    while ((buffer[buffSize] = getc()) != '\n') {
+        if (c == '\b') {
+            if (buffSize > 0) {
+                buffSize += putChar(buffer[buffSize]);
+                buffer[i] = 0;
+            }
+        }
+        else {
+            buffSize+= putChar(buffer[buffSize]);
+        }
+        putChar(c);
+    }
+
+    putChar('\n');
+    //Ahora leo de este buffer de igual manera que antes
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
-        if (buff[j] == ' ')
+        if (buffer[j] == ' ')
         {
             j++;
         }
@@ -177,8 +198,8 @@ uint64_t scanf(const char *fmt, ...)
                 {
                 case 's':;
                     char_dir = va_arg(args, char *);
-                    while (j < buff_length && buff[j] != ' ' && buff[j] != '\t')
-                        *char_dir++ = buff[j++];
+                    while (j < buffSize && buffer[j] != ' ' && buffer[j] != '\t')
+                        *char_dir++ = buffer[j++];
                     *char_dir = 0;
                     i++;
                     count_read++;
@@ -186,19 +207,19 @@ uint64_t scanf(const char *fmt, ...)
                 case 'd':;
                     // VER QUE PASA CON LOS INTS QUE NO SE LEEN BIEN
                     int_dir = va_arg(args, int32_t *);
-                    *int_dir = signed_str_to_num(&j, buff_length, buff);
+                    *int_dir = signed_str_to_num(&j, buffSize, buffer);
                     i++;
                     count_read++;
                     break;
                 case 'u':;
                     int_dir = va_arg(args, uint32_t *);
-                    *int_dir = unsigned_str_to_num(&j, buff_length, buff);
+                    *int_dir = unsigned_str_to_num(&j, buffSize, buffer);
                     i++;
                     count_read++;
                     break;
                 case 'c':;
                     char_dir = va_arg(args, char *);
-                    *char_dir = buff[j++];
+                    *char_dir = buffer[j++];
                     count_read++;
                     i++;
                     break;
