@@ -86,11 +86,21 @@ void vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 		vdNewline();
 		return;
 	}
+	if (c == '\b')
+	{
+		// @TODO: arreglar el backspace para que no borre texto previo
+		vdDelete();
+		return;
+	}
 	if (c == '\t')
 	{
 		vdPrint("    ");
 		return;
 	}
+
+	if (c <= 31)
+		return;
+
 	unsigned char *hexData;
 	if (size == 1)
 		hexData = getCharHexData(c);
