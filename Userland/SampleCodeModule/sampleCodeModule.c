@@ -53,6 +53,7 @@ int main()
 	c = getChar();
 	printf("Se guardo con getChar y putChar imprime: ");
 	putChar(c); */
+	fdprintf(STDMARK, "Podemos imprimir en verde %u veces y todas las veces que queramos\n", 33);
 	printf("Ingrese un caracter: ");
 	unsigned char c;
 	c = getChar();
