@@ -42,7 +42,7 @@ unsigned char *getCharHexData(uint8_t c);
 uint8_t *getLargeCharHexData(uint8_t c);
 void vdPrint(const char *string);
 void vdPrintChar(char character);
-void vdPrintCharStyled(char character, uint32_t color, uint32_t bgColor);
+uint64_t vdPrintCharStyled(char character, uint32_t color, uint32_t bgColor);
 void vdPrintStyled(char *s, uint32_t color, uint32_t bgColor);
 uint64_t vdNPrintStyled(const char *string, uint32_t color, uint32_t bgColor, uint64_t N);
 void vdNewline();
