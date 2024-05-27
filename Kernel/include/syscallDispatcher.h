@@ -6,7 +6,8 @@
 typedef enum
 {
     STDOUT = 1,
-    STDERR
+    STDERR,
+    STDMARK,
 } FileDescriptor;
 
 uint64_t syscallDispatcher(uint64_t id, ...);
