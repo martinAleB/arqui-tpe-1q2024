@@ -94,17 +94,18 @@ char isFKey(unsigned int key)
 char isSpecialKey(unsigned int key)
 {
 	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
-		   key == CAPS_LOCK_PRESS || ALT_PRESS || isFKey(key);
+		   key == CAPS_LOCK_PRESS || key == ALT_PRESS || isFKey(key);
 }
 
-static char buffer[BUFFER_SIZE];
+static char buffer[BUFFER_SIZE] = {0};
 static int currentKey = 0;
+static int nextToRead = 0;
+int shift = 0;
+int capsLock = 0;
 
 void writeIntoBuffer()
 {
 	unsigned int key = getKeyPressed();
-	int shift = 0;
-	int capsLock = 0;
 
 	switch (key)
 	{
@@ -121,7 +122,7 @@ void writeIntoBuffer()
 		break;
 	}
 
-	if (key < MAX_PRESS_KEY)
+	if (key <= MAX_PRESS_KEY)
 	{
 		if (!isSpecialKey(key))
 		{
@@ -142,8 +143,11 @@ void writeIntoBuffer()
 
 unsigned char nextFromBuffer()
 {
-	unsigned char toRet = buffer[currentKey++];
-	currentKey %= BUFFER_SIZE;
+	if (nextToRead == currentKey)
+		return 0;
+	unsigned char toRet = buffer[nextToRead];
+	buffer[nextToRead++] = 0;
+	nextToRead %= BUFFER_SIZE;
 	return toRet;
 }
 /* void getKey()

@@ -32,7 +32,7 @@ uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
     // @TODO: ver si volar el file descriptor
     unsigned char character;
     uint64_t i = 0;
-    while (i < count && (character = nextFromBuffer()) != '\n')
+    while (i < count && (character = nextFromBuffer()) != 0)
     {
         buffer[i++] = character;
     }

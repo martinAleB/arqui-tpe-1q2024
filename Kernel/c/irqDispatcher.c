@@ -20,10 +20,7 @@ void int_20()
 	timer_handler();
 }
 
-
 void int_21()
 {
-
-	getKey();
-	
+	writeIntoBuffer();
 }

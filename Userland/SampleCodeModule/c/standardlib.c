@@ -151,6 +151,7 @@ uint64_t printf(const char *fmt, ...)
     return syscall(4, 1, j, buffer);
 }
 
+// @TODO: ARREGLAR SCANF
 uint64_t scanf(const char *fmt, ...)
 {
     va_list args;
@@ -214,13 +215,29 @@ uint64_t scanf(const char *fmt, ...)
 uint64_t
 putChar(uint64_t character)
 {
-    char buffer[] = {character};
+    uint8_t buffer[] = {character};
     return syscall(4, 1, 1, buffer);
+}
+
+uint8_t getc()
+{
+    uint8_t c;
+    uint64_t l;
+    while ((l = syscall(3, 1, 1, &c)) < 1)
+        ;
+    return c;
 }
 
 uint8_t getChar()
 {
-    char buff[1] = {0};
-    syscall(3, 1, 1, buff);
-    return buff[0];
+    uint8_t toRet, handler;
+    toRet = getc();
+    putChar(toRet);
+    handler = toRet;
+    while ((handler = getc()) != '\n')
+    {
+        putChar(handler);
+    }
+    putChar('\n');
+    return toRet;
 }
