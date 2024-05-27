@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <keyboardDriver.h>
 #include <videoDriver.h>
+#include <interrupts.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -28,8 +29,14 @@ uint64_t syscallDispatcher(uint64_t id, ...)
 
 uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
 {
-    // @TODO: ver que onda stderr
-    return readBuffer(buffer, count);
+    // @TODO: ver si volar el file descriptor
+    unsigned char character;
+    uint64_t i = 0;
+    while (i < count && (character = nextFromBuffer()) != 0)
+    {
+        buffer[i++] = character;
+    }
+    return i;
 }
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
 {

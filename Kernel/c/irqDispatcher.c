@@ -1,5 +1,7 @@
 #include <time.h>
 #include <stdint.h>
+#include <videoDriver.h>
+#include <keyboardDriver.h>
 
 typedef void (*functionsArray[])();
 
@@ -20,4 +22,5 @@ void int_20()
 
 void int_21()
 {
+	writeIntoBuffer();
 }

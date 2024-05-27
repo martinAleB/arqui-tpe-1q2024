@@ -62,6 +62,29 @@ static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
     return mult * unsigned_str_to_num(it, buff_length, buff);
 }
 
+static uint64_t readToEnter(unsigned char buff[MAX_CHARS])
+{
+    uint64_t i = 0;
+    while ((buff[i] = getc()) != '\n')
+    {
+        if (buff[i] == '\b')
+        {
+            if (i > 0)
+            {
+                i += putChar(buff[i]);
+                buff[i] = 0;
+            }
+        }
+        else
+        {
+            i += putChar(buff[i]);
+        }
+    }
+    putChar('\n');
+    buff[i] = 0;
+    return i;
+}
+
 uint64_t printf(const char *fmt, ...)
 {
     va_list args;
@@ -151,22 +174,29 @@ uint64_t printf(const char *fmt, ...)
     return syscall(4, 1, j, buffer);
 }
 
+// @TODO: ARREGLAR SCANF
 uint64_t scanf(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
 
-    char numstr[MAX_NUMBER_LENGTH] = {0};
+    // char buff[MAX_CHARS] = {0};
+    // uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
 
-    char buff[MAX_CHARS] = {0};
-    uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
-
+    char buffer[MAX_CHARS] = {0};
+    char auxBuffer[100] = {0};
     uint64_t i, j, count_read;
     uint8_t *char_dir;
     int32_t *int_dir;
+    char c;
+
+    uint64_t buffSize = readToEnter(buffer);
+
+    putChar('\n');
+    // Ahora leo de este buffer de igual manera que antes
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
-        if (buff[j] == ' ')
+        if (buffer[j] == ' ')
         {
             j++;
         }
@@ -178,8 +208,8 @@ uint64_t scanf(const char *fmt, ...)
                 {
                 case 's':;
                     char_dir = va_arg(args, char *);
-                    while (j < buff_length && buff[j] != ' ' && buff[j] != '\t')
-                        *char_dir++ = buff[j++];
+                    while (j < buffSize && buffer[j] != ' ' && buffer[j] != '\t')
+                        *char_dir++ = buffer[j++];
                     *char_dir = 0;
                     i++;
                     count_read++;
@@ -187,19 +217,19 @@ uint64_t scanf(const char *fmt, ...)
                 case 'd':;
                     // VER QUE PASA CON LOS INTS QUE NO SE LEEN BIEN
                     int_dir = va_arg(args, int32_t *);
-                    *int_dir = signed_str_to_num(&j, buff_length, buff);
+                    *int_dir = signed_str_to_num(&j, buffSize, buffer);
                     i++;
                     count_read++;
                     break;
                 case 'u':;
                     int_dir = va_arg(args, uint32_t *);
-                    *int_dir = unsigned_str_to_num(&j, buff_length, buff);
+                    *int_dir = unsigned_str_to_num(&j, buffSize, buffer);
                     i++;
                     count_read++;
                     break;
                 case 'c':;
                     char_dir = va_arg(args, char *);
-                    *char_dir = buff[j++];
+                    *char_dir = buffer[j++];
                     count_read++;
                     i++;
                     break;
@@ -214,14 +244,22 @@ uint64_t scanf(const char *fmt, ...)
 uint64_t
 putChar(uint64_t character)
 {
-    char buffer[] = {character};
+    uint8_t buffer[] = {character};
     return syscall(4, 1, 1, buffer);
+}
+
+uint8_t getc()
+{
+    uint8_t c;
+    uint64_t l;
+    while ((l = syscall(3, 1, 1, &c)) < 1)
+        ;
+    return c;
 }
 
 uint8_t getChar()
 {
-    char buff[1] = {0};
-    buff[0] = '\n';
-    syscall(3, 1, 1, buff);
+    uint8_t buff[MAX_CHARS];
+    readToEnter(buff);
     return buff[0];
 }

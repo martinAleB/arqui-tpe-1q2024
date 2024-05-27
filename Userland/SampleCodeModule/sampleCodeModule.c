@@ -35,7 +35,7 @@ int main()
 
 	printf("Se ingreso: %s %c %u %d\n", buff, c, u, i);
 	printf("Lo correcto seria: %s %c %u %d", "atata", 'p', 25, -50); */
-	printf("MODULO DE PRUEBA DE LA LIBRERIA STANDARD DE C\nEste mensaje se esta imprimiendo con printf, deberia verse bien.\n========================\n");
+	/* printf("MODULO DE PRUEBA DE LA LIBRERIA STANDARD DE C\nEste mensaje se esta imprimiendo con printf, deberia verse bien.\n========================\n");
 	printf("A continuacion se usa printf para escribir un mensaje formateado:\n");
 	printf("Soy una patata %s de %u kg, mi numero negativo favorito es %d y mi caracter favorito es %c\n", "frita", 70, -3, 'b');
 	printf("Este mensaje esta\ttabeado. Ahora voy a hacer 2 saltos de linea\n\nMira ves que hay 3 saltos de linea?\n\n");
@@ -52,7 +52,26 @@ int main()
 	printf("Ingrese un caracter: ");
 	c = getChar();
 	printf("Se guardo con getChar y putChar imprime: ");
-	putChar(c);
+	putChar(c); */
+	printf("Ingrese un caracter: ");
+	unsigned char c;
+	c = getChar();
+	printf("Caracter: %c\n", c);
+
+	char buff[100];
+	int num;
+	unsigned int num2;
+	char c1;
+	printf("Please enter: an int (except for the cursed one), a string, an unsigned int and a character\n");
+	scanf("%d %s %u %c", &num, buff, &num2, &c1);
+	if (num == 33)
+	{
+		printf("Bala.\n");
+	}
+	else
+	{
+		printf("This was scanned:\nInt = %d\nString = %s\nUnsigned int = %u\nCharacter = %c\n", num, buff, num2, c1);
+	}
 	//  Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)
 		return 0xDEADC0DE;

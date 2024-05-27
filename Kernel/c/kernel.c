@@ -54,12 +54,17 @@ int main()
 {
 	load_idt();
 
-	for (int i = 0 ; i<_384_WIDTH*_384_HEIGHT; i++) drawRectangle(_384[i],(i%_384_WIDTH)*4,4*(i/_384_WIDTH),(i%_384_WIDTH+1)*4,4*(i/_384_WIDTH+1));//putPixel (_384[i], i%_384_WIDTH, i/_384_WIDTH);
-	int currTicks=ticks_elapsed();
-	while (ticks_elapsed()-currTicks<BOOT_SPLASH_SCREEN_LENGTH);
+	for (int i = 0; i < _384_WIDTH * _384_HEIGHT; i++)
+		drawRectangle(_384[i], (i % _384_WIDTH) * 4, 4 * (i / _384_WIDTH), (i % _384_WIDTH + 1) * 4, 4 * (i / _384_WIDTH + 1)); // putPixel (_384[i], i%_384_WIDTH, i/_384_WIDTH);
+	int currTicks = ticks_elapsed();
+	while (ticks_elapsed() - currTicks < BOOT_SPLASH_SCREEN_LENGTH)
+		;
 	vdClear();
 
 	((EntryPoint)sampleCodeModuleAddress)();
+
+	while (1)
+		;
 
 	return 0;
 }
