@@ -62,8 +62,9 @@ static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
     return mult * unsigned_str_to_num(it, buff_length, buff);
 }
 
-static uint64_t readToEnter(unsigned char buff[MAX_CHARS])
+uint64_t readLine(char buff[])
 {
+    // @TODO: validar MAX_CHARS?
     uint64_t i = 0;
     while ((buff[i] = getc()) != '\n')
     {
@@ -195,7 +196,7 @@ uint64_t scanf(const char *fmt, ...)
     {
         if (j == buffSize)
         {
-            buffSize = readToEnter(buffer);
+            buffSize = readLine(buffer);
             j = 0;
         }
         if (buffer[j] == ' ')
@@ -262,6 +263,6 @@ uint8_t getc()
 uint8_t getChar()
 {
     uint8_t buff[MAX_CHARS];
-    readToEnter(buff);
+    readLine(buff);
     return buff[0];
 }
