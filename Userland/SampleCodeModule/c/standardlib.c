@@ -157,8 +157,6 @@ uint64_t scanf(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
 
-    char numstr[MAX_NUMBER_LENGTH] = {0};
-
     char buff[MAX_CHARS] = {0};
     uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
 
@@ -230,14 +228,23 @@ uint8_t getc()
 
 uint8_t getChar()
 {
-    uint8_t toRet, handler;
-    toRet = getc();
-    putChar(toRet);
-    handler = toRet;
-    while ((handler = getc()) != '\n')
+    uint8_t buff[MAX_CHARS];
+    uint64_t i = 0;
+    while ((buff[i] = getc()) != '\n')
     {
-        putChar(handler);
+        if (buff[i] == '\b')
+        {
+            if (i > 0)
+            {
+                i += putChar(buff[i]);
+                buff[i] = 0;
+            }
+        }
+        else
+        {
+            i += putChar(buff[i]);
+        }
     }
     putChar('\n');
-    return toRet;
+    return buff[0];
 }
