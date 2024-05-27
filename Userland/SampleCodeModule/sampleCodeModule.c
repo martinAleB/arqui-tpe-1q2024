@@ -64,10 +64,12 @@ int main()
 	char c1;
 	printf("Please enter: an int (except for the cursed one), a string, an unsigned int and a character\n");
 	scanf("%d %s %u %c", &num, buff, &num2, &c1);
-	if (num == 33) {
+	if (num == 33)
+	{
 		printf("Bala.\n");
 	}
-	 else {
+	else
+	{
 		printf("This was scanned:\nInt = %d\nString = %s\nUnsigned int = %u\nCharacter = %c\n", num, buff, num2, c1);
 	}
 	//  Test if BSS is properly set up

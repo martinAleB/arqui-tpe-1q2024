@@ -62,6 +62,29 @@ static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
     return mult * unsigned_str_to_num(it, buff_length, buff);
 }
 
+static uint64_t readToEnter(unsigned char buff[MAX_CHARS])
+{
+    uint64_t i = 0;
+    while ((buff[i] = getc()) != '\n')
+    {
+        if (buff[i] == '\b')
+        {
+            if (i > 0)
+            {
+                i += putChar(buff[i]);
+                buff[i] = 0;
+            }
+        }
+        else
+        {
+            i += putChar(buff[i]);
+        }
+    }
+    putChar('\n');
+    buff[i] = 0;
+    return i;
+}
+
 uint64_t printf(const char *fmt, ...)
 {
     va_list args;
@@ -157,8 +180,8 @@ uint64_t scanf(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
 
-    //char buff[MAX_CHARS] = {0};
-    //uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
+    // char buff[MAX_CHARS] = {0};
+    // uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
 
     char buffer[MAX_CHARS] = {0};
     char auxBuffer[100] = {0};
@@ -167,23 +190,10 @@ uint64_t scanf(const char *fmt, ...)
     int32_t *int_dir;
     char c;
 
-    //Primero tengo que  ir pidiendo los caracteres hasta el enter y guardarlos en un buffer, asi como imprimirlos
-    int buffSize = 0;
-    while ((buffer[buffSize] = getc()) != '\n') {
-        if (c == '\b') {
-            if (buffSize > 0) {
-                buffSize += putChar(buffer[buffSize]);
-                buffer[i] = 0;
-            }
-        }
-        else {
-            buffSize+= putChar(buffer[buffSize]);
-        }
-        putChar(c);
-    }
+    uint64_t buffSize = readToEnter(buffer);
 
     putChar('\n');
-    //Ahora leo de este buffer de igual manera que antes
+    // Ahora leo de este buffer de igual manera que antes
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
         if (buffer[j] == ' ')
@@ -250,22 +260,6 @@ uint8_t getc()
 uint8_t getChar()
 {
     uint8_t buff[MAX_CHARS];
-    uint64_t i = 0;
-    while ((buff[i] = getc()) != '\n')
-    {
-        if (buff[i] == '\b')
-        {
-            if (i > 0)
-            {
-                i += putChar(buff[i]);
-                buff[i] = 0;
-            }
-        }
-        else
-        {
-            i += putChar(buff[i]);
-        }
-    }
-    putChar('\n');
+    readToEnter(buff);
     return buff[0];
 }
