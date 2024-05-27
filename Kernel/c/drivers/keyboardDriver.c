@@ -5,6 +5,7 @@
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
 #define TAB_NUM 4
+#define BUFFER_SIZE 1000
 
 // Define de teclas especiales:
 #define ESC 0x01
@@ -38,7 +39,7 @@ static unsigned char keyValues[KEYS][2] = {
 	{'0', ')'},
 	{'-', '_'},
 	{'=', '+'},
-	{8, 8},
+	{'\b', '\b'},
 	{9, 9},
 	{'q', 'Q'},
 	{'w', 'W'},
@@ -52,7 +53,7 @@ static unsigned char keyValues[KEYS][2] = {
 	{'p', 'P'},
 	{'[', '{'},
 	{']', '}'},
-	{13, 13},
+	{'\n', '\n'}, // por que habia 13, 13 antes?
 	{0, 0},
 	{'a', 'A'},
 	{'s', 'S'},
@@ -92,77 +93,114 @@ char isFKey(unsigned int key)
 
 char isSpecialKey(unsigned int key)
 {
-	return key == ESC || key == ENTER || key == BACKSPACE ||
-		   key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
-		   key == CAPS_LOCK_PRESS || key == TAB ||
-		   isFKey(key);
+	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
+		   key == CAPS_LOCK_PRESS || key == ALT_PRESS || isFKey(key);
 }
 
-void getKey()
-{
+static char buffer[BUFFER_SIZE] = {0};
+static int currentKey = 0;
+static int nextToRead = 0;
+int shift = 0;
+int capsLock = 0;
 
-	vdNPrintStyled("Press ESC to exit Text.", 0xFFFF00, 0, 50);
-	vdNewline();
-	vdChangeFontSize();
-	vdPrint("[Sample Text]: ");
+void writeIntoBuffer()
+{
+	unsigned int key = getKeyPressed();
+
+	switch (key)
+	{
+	case R_SHIFT_PRESS:
+	case L_SHIFT_PRESS:
+		shift = 1;
+		break;
+	case R_SHIFT_RELEASE:
+	case L_SHIFT_RELEASE:
+		shift = 0;
+		break;
+	case CAPS_LOCK_PRESS:
+		capsLock = (capsLock + 1) % 2;
+		break;
+	}
+
+	if (key <= MAX_PRESS_KEY)
+	{
+		if (!isSpecialKey(key))
+		{
+			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
+			{
+				if (capsLock == 1)
+					shift = shift ? 0 : 1;
+			}
+			buffer[currentKey++] = keyValues[key][shift];
+		}
+	}
+	else
+	{
+		buffer[currentKey++] = key;
+	}
+	currentKey %= BUFFER_SIZE;
+}
+
+unsigned char nextFromBuffer()
+{
+	if (nextToRead == currentKey)
+		return 0;
+	unsigned char toRet = buffer[nextToRead];
+	buffer[nextToRead++] = 0;
+	nextToRead %= BUFFER_SIZE;
+	return toRet;
+}
+/* void getKey()
+{
 
 	unsigned int key;
 	int shift = 0;
 	int capsLock = 0;
 
-	while (1)
+	key = getKeyPressed();
+
+	switch (key)
 	{
-		key = getKeyPressed();
+	case R_SHIFT_PRESS:
+	case L_SHIFT_PRESS:
+		shift = 1;
+		break;
+	case R_SHIFT_RELEASE:
+	case L_SHIFT_RELEASE:
+		shift = 0;
+		break;
+	case CAPS_LOCK_PRESS:
+		capsLock = (capsLock + 1) % 2;
+		break;
+	case BACKSPACE:
+		vdDelete();
+		break;
+	case ENTER:
+		vdNewline();
+		break;
+	case TAB:
+		for (int i = 0; i < TAB_NUM; i++)
+			vdPrintChar(' ');
+		break;
+	}
 
-		// PARA TESTEAR, SALGO DEL TECLADO CON
-		// LA TECLA ESC
-		if (key == ESC)
-			break;
+	int shifted = shift;
 
-		switch (key)
+	if (key < MAX_PRESS_KEY)
+	{
+		if (!isSpecialKey(key))
 		{
-		case R_SHIFT_PRESS:
-		case L_SHIFT_PRESS:
-			shift = 1;
-			break;
-		case R_SHIFT_RELEASE:
-		case L_SHIFT_RELEASE:
-			shift = 0;
-			break;
-		case CAPS_LOCK_PRESS:
-			capsLock = (capsLock + 1) % 2;
-			break;
-		case BACKSPACE:
-			vdDelete();
-			break;
-		case ENTER:
-			vdNewline();
-			break;
-		case TAB:
-			for (int i = 0; i < TAB_NUM; i++)
-				vdPrintChar(' ');
-			break;
-		}
-
-		int shifted = shift;
-
-		if (key < MAX_PRESS_KEY)
-		{
-			if (!isSpecialKey(key))
+			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
 			{
-				if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
-				{
-					if (capsLock == 1)
-						shifted = shifted ? 0 : 1;
-				}
-				vdPrintChar(keyValues[key][shifted]);
+				if (capsLock == 1)
+					shifted = shifted ? 0 : 1;
 			}
+			vdPrintChar(keyValues[key][shifted]);
 		}
 	}
-	vdClear();
-}
+} */
 
-uint64_t readBuffer(char *buffer, uint64_t count)
+/* uint64_t readBuffer(char *buffer, uint64_t count)
 {
 	uint16_t key;
 	uint8_t shift = 0;
@@ -224,4 +262,4 @@ uint64_t readBuffer(char *buffer, uint64_t count)
 		}
 	}
 	return it;
-}
+} */

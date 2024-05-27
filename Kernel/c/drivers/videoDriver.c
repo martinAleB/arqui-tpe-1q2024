@@ -78,19 +78,28 @@ void vdPrintChar(char character)
  * es posible usar el size como modificador dado que LARGE_FONT tiene exactamente el doble de pixeles
  * de alto y de ancho que SMALL_FONT asi que los pixeles a dibujar seran el doble en cada dimension en cada caracter
  **/
-void vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
+uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 { // faltan casos especiales de /n y eso -->> meter en putchar
 	// int size = LARGE_FONT;
 	if (c == '\n')
 	{
 		vdNewline();
-		return;
+		return 1;
+	}
+	if (c == '\b')
+	{
+		vdDelete();
+		return -1;
 	}
 	if (c == '\t')
 	{
 		vdPrint("    ");
-		return;
+		return 4;
 	}
+
+	if (c <= 31)
+		return 0;
+
 	unsigned char *hexData;
 	if (size == 1)
 		hexData = getCharHexData(c);
@@ -113,6 +122,7 @@ void vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 		y++;
 		x = 0;
 	}
+	return 1;
 }
 
 void vdPrintStyled(char *string, uint32_t color, uint32_t bgColor)
@@ -123,10 +133,10 @@ void vdPrintStyled(char *string, uint32_t color, uint32_t bgColor)
 
 uint64_t vdNPrintStyled(const char *string, uint32_t color, uint32_t bgColor, uint64_t N)
 {
-	uint64_t i;
+	uint64_t i, printed = 0;
 	for (i = 0; i < N && string[i] != 0; i++)
-		vdPrintCharStyled(string[i], color, bgColor);
-	return i;
+		printed += vdPrintCharStyled(string[i], color, bgColor);
+	return printed;
 }
 // TODO CHEQUEO AL FINAL PARA WRAPAROUND?
 void vdNewline()

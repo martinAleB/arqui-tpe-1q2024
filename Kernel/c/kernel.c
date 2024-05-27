@@ -100,13 +100,16 @@ int main()
 
 	ncClear();
 
-	getKey();
+	// getKey();
 	ncNewline();
 	ncPrint("[Finished]");
 	ncNewline();
 
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+
+	while (1)
+		;
 
 	return 0;
 }

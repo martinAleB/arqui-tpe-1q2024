@@ -150,10 +150,21 @@ _irq60Handler:
 	push rdx		; swap entre
 	mov rdx, rcx	; los registros
 	pop rcx			; rcx y rdx
+
+	;push rdi
+	;mov rdi, 0xFF
+	;call picMasterMask
+	;pop rdi
+
 	call syscallDispatcher
+	
+	;mov rdi, 0xFD
+	;call picMasterMask
+
 	pop rsi
 	pop rdi
 	pop rbx
+
 	iretq
 
 ;Zero Division Exception
