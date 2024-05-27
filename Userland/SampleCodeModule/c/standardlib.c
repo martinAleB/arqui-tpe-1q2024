@@ -188,14 +188,16 @@ uint64_t scanf(const char *fmt, ...)
     uint64_t i, j, count_read;
     uint8_t *char_dir;
     int32_t *int_dir;
-    char c;
 
-    uint64_t buffSize = readToEnter(buffer);
-
-    putChar('\n');
+    uint64_t buffSize = 0;
     // Ahora leo de este buffer de igual manera que antes
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
+        if (j == buffSize)
+        {
+            buffSize = readToEnter(buffer);
+            j = 0;
+        }
         if (buffer[j] == ' ')
         {
             j++;
