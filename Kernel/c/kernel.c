@@ -5,6 +5,9 @@
 #include <naiveConsole.h>
 #include <keyboardDriver.h>
 #include <idtLoader.h>
+#include <nano.h>
+
+#define BOOT_SPLASH_SCREEN_LENGTH 33
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -36,45 +39,13 @@ void *initializeKernelBinary()
 {
 	char buffer[10];
 
-	ncPrint("[x64BareBones]");
-	ncNewline();
-
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
-
-	ncPrint("[Loading modules]");
-	ncNewline();
 	void *moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
 
 	clearBSS(&bss, &endOfKernel - &bss);
-
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
-
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
 
 	return getStackBase();
 }
@@ -83,30 +54,14 @@ int main()
 {
 	load_idt();
 
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncNewline();
-	ncNewline();
+	for (int i = 0; i < _384_WIDTH * _384_HEIGHT; i++)
+		drawRectangle(_384[i], (i % _384_WIDTH) * 4, 4 * (i / _384_WIDTH), (i % _384_WIDTH + 1) * 4, 4 * (i / _384_WIDTH + 1)); // putPixel (_384[i], i%_384_WIDTH, i/_384_WIDTH);
+	int currTicks = ticks_elapsed();
+	while (ticks_elapsed() - currTicks < BOOT_SPLASH_SCREEN_LENGTH)
+		;
+	vdClear();
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char *)sampleDataModuleAddress);
-	ncNewline();
-
-	ncClear();
-
-	// getKey();
-	ncNewline();
-	ncPrint("[Finished]");
-	ncNewline();
-
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	((EntryPoint)sampleCodeModuleAddress)();
 
 	while (1)
 		;
