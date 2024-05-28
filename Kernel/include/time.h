@@ -5,4 +5,5 @@ void timer_handler();
 int ticks_elapsed();
 int seconds_elapsed();
 void sleep(uint32_t ticksToWait);
+void setTickFrequency(uint16_t freq);
 #endif

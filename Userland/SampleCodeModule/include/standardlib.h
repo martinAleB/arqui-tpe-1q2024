@@ -17,6 +17,6 @@ uint64_t putChar(uint64_t character);
 uint8_t getChar();
 uint8_t getc();
 uint64_t getNextToRead(char *c);
-void beep(uint32_t ticks);
+void beep(uint32_t hz, uint32_t ticks);
 
 #endif

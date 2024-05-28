@@ -18,3 +18,9 @@ void sleep(uint32_t ticksToWait){
     int ticksAtCallTime = ticks_elapsed();
 	while(ticks-ticksAtCallTime<ticksToWait);
 }
+void setTickFrequency(uint16_t freq){
+	int ticks = 10193800/freq;
+	outb(0x43, 0xb6);
+	outb(0x40, (uint8_t)(ticks));
+	outb(0x40, (uint8_t)(ticks >> 8));
+}

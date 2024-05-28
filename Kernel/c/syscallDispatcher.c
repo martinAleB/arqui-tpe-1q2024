@@ -45,9 +45,11 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     case 9:;
         // sys_play_sound
+        
+        uint64_t sound_ticks = va_arg(args, uint64_t);
+        uint64_t hz = va_arg(args, uint64_t); //hacer que no devuelva cero
         _sti();
-        uint32_t sound_ticks = va_arg(args, uint32_t);
-        beep(sound_ticks);
+        beep(hz, sound_ticks);
         _cli();
         break;
     case 10:;
