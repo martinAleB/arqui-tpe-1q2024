@@ -1,5 +1,6 @@
 #include <nanoshell.h>
 #include <standardlib.h>
+#include <nanoshell_functions.h>
 
 #define CMD_MAX_CHARS 1000
 #define FUNCTION_NUM 8
@@ -11,8 +12,9 @@ static char * help_text = "A continuación se muestran los comandos disponibles:
                         help --> muestra todos los comandos disponibles a ejecutarse\n\
                         registers --> muestra el estado de los registros actualmente o cuando se los guardó por última vez\n\
                         time --> muestra la hora actual en formato hh:mm:ss\n\
-                        eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar contra la compu o contra un amigo!\n\
-                        \t\t\t\tEl objetivo es sobrevivir más que tu oponente, mové tu serpiente con las flechas o con wasd, y no te choques con nada! Buena suerte!\n\
+                        eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar contra la compu\n\
+                        \t\t\t   o contra un amigo! El objetivo es sobrevivir más que tu oponente, move tu serpiente con\n\
+                        \t\t\t   las flechas o con wasd, y no te choques con nada! Buena suerte!\n\
                         echo [string] --> imprime en pantalla el string pasado como argumento\n\
                         change_font --> cambia el tamaño de la fuente actual\n\
                         vim --> abre un editor de texto\n\
@@ -79,8 +81,7 @@ void startNanoShell()
 				break;
 				
 			case CHANGE_FONT:
-                printf("Coming soon...");
-                //change_font_size();
+                changeFontSize();
                 break;
 			
 			case VIM:

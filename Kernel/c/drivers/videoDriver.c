@@ -122,6 +122,13 @@ uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 		y++;
 		x = 0;
 	}
+
+	//Hotfix: si se termina la pantalla vuelve a empezar de arriba
+	if (y > (SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE)) {
+		vdClear();
+		y=0;
+	}
+
 	return 1;
 }
 

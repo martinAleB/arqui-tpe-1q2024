@@ -290,6 +290,13 @@ int strcmp(char * s1, char *s2) {
             checked = toReturn==0? 0 : 1;
         }
 	}
+    //Hotfix para que un string vacío no sea igual a todo
+    if (s1[i]) {
+        toReturn = s1[i];
+    } 
+    else if(s2[i]) {
+        toReturn = s2[i];
+    }
 	return toReturn;
 }
 
