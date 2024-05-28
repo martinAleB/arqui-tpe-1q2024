@@ -27,3 +27,8 @@ void getRegisters(){
         }
     }
 }
+
+void changeFontSize() {
+    syscall(8, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall clear 
+    syscall(10, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall change_font_size
+}
