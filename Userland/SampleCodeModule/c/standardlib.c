@@ -280,3 +280,22 @@ uint8_t getChar()
     readLine(buff);
     return buff[0];
 }
+
+//Debería retornar int o algo más específico?
+int strcmp(char * s1, char *s2) {
+	int i, toReturn=0, checked=0;
+	for (i=0; s1[i] && s2[i] ; i++) {
+		if (!checked) {
+            toReturn += (s1[i] - s2[i]);
+            checked = toReturn==0? 0 : 1;
+        }
+	}
+	return toReturn;
+}
+
+void toMinus(char * str) {
+    for (int i=0; str[i]; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+            str[i] += ('a' - 'A');
+    }
+}
