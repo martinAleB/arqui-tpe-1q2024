@@ -1,5 +1,6 @@
 #include <nanoshell.h>
 #include <standardlib.h>
+#include <shellfunc.h>
 
 #define CMD_MAX_CHARS 1000
 #define PROMPT "NanoShell<33> $> "
@@ -14,8 +15,7 @@ void startNanoShell()
     }
 }
 
-static void readCommand()
-{
+static void readCommand(){
     fdprintf(STDMARK, PROMPT);
     char cmdBuff[CMD_MAX_CHARS];
     uint64_t length = readLine(cmdBuff);

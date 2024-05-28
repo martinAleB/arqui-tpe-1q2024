@@ -1,6 +1,5 @@
 #include <keyboardDriver.h>
 #include <lib.h>
-#include <videoDriver.h>
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
@@ -17,12 +16,12 @@
 #define R_SHIFT_PRESS 0x36
 #define R_SHIFT_RELEASE 0xB6
 #define CAPS_LOCK_PRESS 0x3A
+#define ALT_PRESS 0x3B		//ALT PARA GUARDAR REGISTROS
+#define ALT_RELEASE 0xB8
 
 // TODO
 #define CTRL_PRESS 0x1D
 #define CTRL_RELEASE 0x9D
-#define ALT_PRESS 0x3B
-#define ALT_RELEASE 0xB8
 
 static unsigned char keyValues[KEYS][2] = {
 	{0, 0},
@@ -94,7 +93,7 @@ char isFKey(unsigned int key)
 char isSpecialKey(unsigned int key)
 {
 	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS ||
-		   key == CAPS_LOCK_PRESS || key == ALT_PRESS || isFKey(key);
+		   key == CAPS_LOCK_PRESS || key == ALT_PRESS || isFKey(key) || key == ESC;
 }
 
 static char buffer[BUFFER_SIZE] = {0};
@@ -102,6 +101,7 @@ static int currentKey = 0;
 static int nextToRead = 0;
 int shift = 0;
 int capsLock = 0;
+int registerPressed = 0;
 
 void writeIntoBuffer()
 {
@@ -120,6 +120,14 @@ void writeIntoBuffer()
 	case CAPS_LOCK_PRESS:
 		capsLock = (capsLock + 1) % 2;
 		break;
+	case ESC:
+		registerPressed = 1;
+		break;
+	}
+
+	if(registerPressed){
+		saveRegisters();
+		registerPressed = 0;
 	}
 
 	if (key <= MAX_PRESS_KEY)
