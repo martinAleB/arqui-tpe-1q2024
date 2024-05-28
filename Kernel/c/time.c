@@ -16,5 +16,5 @@ int seconds_elapsed() {
 }
 void sleep(uint32_t ticksToWait){
     int ticksAtCallTime = ticks_elapsed();
-	while(ticks_elapsed()-ticksAtCallTime<5);
+	while(ticks-ticksAtCallTime<ticksToWait);
 }

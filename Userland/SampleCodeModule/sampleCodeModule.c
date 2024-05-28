@@ -63,7 +63,7 @@ int main()
 	syscall(8,0,0,0);
 	syscall(10,0,0,0);
 
-	eliminator();
+	
 
 	printf("Caracter: %c\n", c);
 	printf("a");
