@@ -26,7 +26,7 @@
 
 unsigned char playground[WIDTH][HEIGHT];
 
-uint8_t speed;
+uint8_t speed=1;
 uint8_t p2Present=1;
 uint64_t p1wins=0;
 uint64_t p2wins=0;
@@ -87,10 +87,10 @@ void initPlayground()
 
 void play(Player *p1, Player *p2)
 {
-    wait(1);
+    wait(speed);
     uint8_t c;
     uint64_t l;
-    while (syscall(3, 1, 1, &c)>0) switch(c){
+    while (getNextToRead(&c)>0) switch(c){
         case 'w':;
         if (p1->prevMove!=DOWN) p1->nextMove=UP;
         break;
@@ -122,8 +122,53 @@ void play(Player *p1, Player *p2)
     if (p1->playing)move(p1);
 }
 
-void eliminator()
+void settings(){
+    printf("Do you want to play in two player mode? (y/n)\n");
+    char c;
+    do{
+        c=getChar();
+        if (c == 'y')p2Present=1;
+        if (c == 'n')p2Present=0;
+    }while (c!='y'&& c!='n');
+    printf("Select your speed from 1 to 4\n");
+    do{
+        c=getChar();
+        speed=5-(c-'0');
+    }while (c!='1'&& c!='2'&& c!='3'&& c!='4');
+
+}
+
+void eliminator(){
+    printf("Press space to %s, s for settings or q to quit the game.\n", (p1wins + p2wins)?"keep playing":"play");
+    char c;
+    while (1) {
+        getNextToRead(&c);
+        if (c == ' '){
+            clearScreen();
+            game();
+            return;
+        }
+        if (c == 's'){
+            settings();
+            clearScreen();
+            game();
+            return;
+        }
+        if (c == 'q'){
+            clearScreen();
+            p1wins=0;
+            p2wins=0;
+            return;
+        }
+        
+    }  clearScreen();
+
+    
+}
+
+void game()
 {
+
     // PREGUNTAR VELOCIDAD Y TAMANO Y JUGADORES ANTES DE INICIALIZAR
     initPlayground();
     Player p1 = {START_X_OFFSET, START_Y_OFFSET, 0, PLAYER1_COLOR, RIGHT,RIGHT, PLAYING};
@@ -132,12 +177,9 @@ void eliminator()
         play(&p1, &p2);
     if (p1.lost) p2wins++; else p1wins++;
     printf("P1 SCORE : %d ",p1wins);
-    printf("P2 SCORE : %d ",p2wins);
-
-    wait(50);
-
-    clearScreen();
+    printf("P2 SCORE : %d \n",p2wins);
+    
     eliminator();
+    clearScreen();
 
-    syscall(8, 0, 0, 0);
 }
