@@ -77,6 +77,6 @@ uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
 }
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
 {
-    uint32_t styleByFileDescriptor[] = {0, 0x00FFFFFF, 0x00FF0000};
+    uint32_t styleByFileDescriptor[] = {0, 0x00FFFFFF, 0x00FF0000, 0x0000FF00};
     return vdNPrintStyled(buffer, styleByFileDescriptor[fd], 0, count);
 }

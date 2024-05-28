@@ -85,11 +85,8 @@ static uint64_t readToEnter(unsigned char buff[MAX_CHARS])
     return i;
 }
 
-uint64_t printf(const char *fmt, ...)
+static uint64_t fdprintfargs(FileDescriptor fd, const char *fmt, va_list args)
 {
-    va_list args;
-    va_start(args, fmt);
-
     char buffer[MAX_CHARS] = {0};
 
     char numstr[MAX_NUMBER_LENGTH] = {0};
@@ -170,8 +167,25 @@ uint64_t printf(const char *fmt, ...)
     }
     buffer[j++] = 0;
 
+    return syscall(4, fd, j, buffer);
+}
+
+uint64_t fdprintf(FileDescriptor fd, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    uint64_t toRet = fdprintfargs(fd, fmt, args);
     va_end(args);
-    return syscall(4, 1, j, buffer);
+    return toRet;
+}
+
+uint64_t printf(const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    uint64_t toRet = fdprintfargs(STDOUT, fmt, args);
+    va_end(args);
+    return toRet;
 }
 
 // @TODO: ARREGLAR SCANF
@@ -188,14 +202,16 @@ uint64_t scanf(const char *fmt, ...)
     uint64_t i, j, count_read;
     uint8_t *char_dir;
     int32_t *int_dir;
-    char c;
 
-    uint64_t buffSize = readToEnter(buffer);
-
-    putChar('\n');
+    uint64_t buffSize = 0;
     // Ahora leo de este buffer de igual manera que antes
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
+        if (j == buffSize)
+        {
+            buffSize = readToEnter(buffer);
+            j = 0;
+        }
         if (buffer[j] == ' ')
         {
             j++;
