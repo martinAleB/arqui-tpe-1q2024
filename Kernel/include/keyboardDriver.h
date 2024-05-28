@@ -3,6 +3,8 @@
 
 #include <naiveConsole.h>
 
+extern void saveRegisters();
+
 unsigned int getKeyPressed();
 void writeIntoBuffer();
 unsigned char nextFromBuffer();
