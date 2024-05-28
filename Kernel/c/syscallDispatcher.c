@@ -4,6 +4,11 @@
 #include <keyboardDriver.h>
 #include <videoDriver.h>
 #include <interrupts.h>
+#include <time.h>
+
+
+
+
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -21,6 +26,38 @@ uint64_t syscallDispatcher(uint64_t id, ...)
             ret = read(fd, buffer, count);
         else
             ret = write(fd, buffer, count);
+        break;
+    case 5:;
+    //sys_draw_rectangle
+       // uint32_t color = va_arg(args, uint32_t);
+        //uint32_t upl = va_arg(args, uint32_t);
+        //uint32_t lor = va_arg(args, uint32_t);
+        Rectangle *r = va_arg(args, Rectangle *);
+        //uint32_t color = va_arg(args, uint32_t);
+        //drawRectangle(color, coord->up_l_x, coord->up_l_y, coord->lo_r_x, coord->lo_r_y);
+       // drawRectangle(color,upl,upl,50,50);4
+       drawRectangle(r->color,r->up_l_x, r->up_l_y, r->lo_r_x, r->lo_r_y);
+        break;
+    case 6:;
+    //sys_rtc
+        break;
+    case 7:;
+    //sys_sleep
+        _sti();
+        uint32_t ticks = va_arg(args, uint32_t);
+        sleep(ticks);
+        _cli();
+        break;
+    case 8:;
+    //sys_clear
+    vdClear();
+        break;
+    case 9:;
+    //sys_play_sound
+        break;
+    case 10:;
+    //sys_change_font
+    vdChangeFontSize();
         break;
     }
     va_end(args);

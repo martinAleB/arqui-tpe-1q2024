@@ -1,12 +1,14 @@
 /* sampleCodeModule.c */
 #include <standardlib.h>
-
+#include <eliminator.h>
 char *v = (char *)0xB8000 + 79 * 2;
 
 static int var1 = 0;
 static int var2 = 0;
 
 extern void call_80h();
+
+
 
 int main()
 {
@@ -53,11 +55,30 @@ int main()
 	c = getChar();
 	printf("Se guardo con getChar y putChar imprime: ");
 	putChar(c); */
+	eliminator();
 	printf("Ingrese un caracter: ");
 	unsigned char c;
 	c = getChar();
-	printf("Caracter: %c\n", c);
+	syscall(8,0,0,0);
+	syscall(10,0,0,0);
 
+	eliminator();
+
+	printf("Caracter: %c\n", c);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	
 	char buff[100];
 	int num;
 	unsigned int num2;

@@ -1,4 +1,5 @@
 #include <time.h>
+#include <stdint.h>
 
 static unsigned long ticks = 0;
 
@@ -12,4 +13,8 @@ int ticks_elapsed() {
 
 int seconds_elapsed() {
 	return ticks / 18;
+}
+void sleep(uint32_t ticksToWait){
+    int ticksAtCallTime = ticks_elapsed();
+	while(ticks_elapsed()-ticksAtCallTime<5);
 }

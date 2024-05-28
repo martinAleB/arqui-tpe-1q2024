@@ -22,22 +22,6 @@
 **
 **************************************/
 
-/* DE NAIVE CONSOLE -> TRADUCIR
-
-void ncPrint(const char *string);
-void ncPrintChar(char character);
-uint64_t ncNPrintStyled(const char *string, uint8_t style, uint64_t N);
-void ncPrintCharStyled(char character, uint8_t style);
-void ncNewline();
-void ncPrintDec(uint64_t value);
-void ncPrintHex(uint64_t value);
-void ncPrintBin(uint64_t value);
-void ncPrintBase(uint64_t value, uint32_t base);
-void ncClear();
-void ncDelete();
-
-*/
-
 unsigned char *getCharHexData(uint8_t c);
 uint8_t *getLargeCharHexData(uint8_t c);
 void vdPrint(const char *string);
@@ -54,5 +38,19 @@ void vdClear();
 void vdDelete();
 void vdChangeFontSize();
 void drawRectangle(uint32_t color, uint16_t up_l_x, uint16_t up_l_y, uint16_t lo_r_x, uint16_t lo_r_y);
+
+/*************************************
+**
+** DECLARACIONES DE STRUCTS
+**
+**************************************/
+
+typedef struct{
+    uint16_t up_l_x;
+    uint16_t up_l_y;
+    uint16_t lo_r_y;
+    uint16_t lo_r_x;
+	uint32_t color;
+} Rectangle;
 
 #endif
