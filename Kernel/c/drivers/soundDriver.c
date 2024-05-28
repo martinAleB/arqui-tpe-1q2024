@@ -40,7 +40,7 @@ static void timer_wait(int ticks)
 // Hace un beep
 void beep(int ticks)
 {
-	play_sound(1000);
-	timer_wait(ticks);
+	play_sound(3333);
+	timer_wait(3);
 	nosound();
 }

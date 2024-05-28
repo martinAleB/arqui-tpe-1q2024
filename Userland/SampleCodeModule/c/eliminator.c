@@ -178,7 +178,7 @@ void game()
     if (p1.lost) p2wins++; else p1wins++;
     printf("P1 SCORE : %d ",p1wins);
     printf("P2 SCORE : %d \n",p2wins);
-    
+    beep(3);
     eliminator();
     clearScreen();
 

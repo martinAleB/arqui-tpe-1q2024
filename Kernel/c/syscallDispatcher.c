@@ -45,6 +45,10 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     case 9:;
         // sys_play_sound
+        _sti();
+        uint32_t sound_ticks = va_arg(args, uint32_t);
+        beep(sound_ticks);
+        _cli();
         break;
     case 10:;
         // sys_change_font

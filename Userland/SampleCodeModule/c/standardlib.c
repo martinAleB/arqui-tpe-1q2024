@@ -289,3 +289,7 @@ uint8_t getChar()
 void wait(uint32_t ticks){
     syscall(7,ticks,0,0);
 }
+
+void beep(uint32_t ticks){
+    syscall(9,ticks,0,0);
+}
