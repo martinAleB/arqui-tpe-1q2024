@@ -7,6 +7,7 @@
 #include <registers.h>
 
 #define REGISTERS 18
+#include <time.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -24,9 +25,43 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         else
             ret = write(fd, buffer, count);
         break;
+    case 5:;
+        // sys_draw_rectangle
+
+        Rectangle *r = va_arg(args, Rectangle *);
+        drawRectangle(r->color, r->up_l_x, r->up_l_y, r->lo_r_x, r->lo_r_y);
+        break;
+    case 6:;
+        // sys_rtc
+        break;
+    case 7:;
+        // sys_sleep
+        _sti();
+        uint32_t ticks = va_arg(args, uint32_t);
+        sleep(ticks);
+        _cli();
+        break;
+    case 8:;
+        // sys_clear
+        vdClear();
+        break;
+    case 9:;
+        // sys_play_sound
+        
+        uint64_t sound_ticks = va_arg(args, uint64_t);
+        uint64_t hz = va_arg(args, uint64_t); //hacer que no devuelva cero
+        _sti();
+        beep(hz, sound_ticks);
+        _cli();
+        break;
+    case 10:;
+        // sys_change_font
+        vdChangeFontSize();
+        break;
     case 11:;
         uint64_t* arr = va_arg(args, uint64_t*);
         ret = getRegBackup(arr);
+        break;
     }
     va_end(args);
     return ret;

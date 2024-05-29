@@ -1,6 +1,7 @@
 /* sampleCodeModule.c */
 #include <standardlib.h>
 #include <nanoshell.h>
+#include <eliminator.h>
 
 char *v = (char *)0xB8000 + 79 * 2;
 
@@ -8,6 +9,8 @@ static int var1 = 0;
 static int var2 = 0;
 
 extern void call_80h();
+
+
 
 int main()
 {
@@ -55,12 +58,31 @@ int main()
 	printf("Se guardo con getChar y putChar imprime: ");
 	putChar(c); */
 	/* printf("Ingrese un caracter: ");
+	eliminator();
 	fdprintf(STDMARK, "Podemos imprimir en verde %u veces y todas las veces que queramos\n", 33);
 	printf("Ingrese un caracter: ");
 	unsigned char c;
 	c = getChar();
-	printf("Caracter: %c\n", c);
+	syscall(8,0,0,0);
+	syscall(10,0,0,0);
 
+	
+
+	printf("Caracter: %c\n", c);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	syscall(7,15,0,0);
+	printf("a");
+	
 	char buff[100];
 	int num;
 	unsigned int num2;

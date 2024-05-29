@@ -6,8 +6,13 @@ uint64_t syscall(uint64_t rax, uint64_t rbx, uint64_t rdx, uint64_t rcx);
 #define MAX_CHARS 1000
 #define MAX_NUMBER_LENGTH 100
 
+uint64_t getNextToRead(char *c){
+    return syscall(3, 1, 1, c);
+}
+
 static void unsigned_num_to_str(uint32_t num, uint32_t start, char *buff)
-{
+{   
+    
     uint32_t i = start;
     if(num==0)buff[i++]='0';
     while (i < MAX_NUMBER_LENGTH - 1 && num > 0)
@@ -270,7 +275,7 @@ uint8_t getc()
 {
     uint8_t c;
     uint64_t l;
-    while ((l = syscall(3, 1, 1, &c)) < 1)
+    while ((l = getNextToRead(&c)) < 1)
         ;
     return c;
 }
@@ -306,4 +311,12 @@ void toMinus(char * str) {
         if (str[i] >= 'A' && str[i] <= 'Z')
             str[i] += ('a' - 'A');
     }
+}
+
+void wait(uint32_t ticks){
+    syscall(7,ticks,0,0);
+}
+
+void beep(uint32_t hz, uint32_t ticks){
+    syscall(9,ticks,0,hz);
 }

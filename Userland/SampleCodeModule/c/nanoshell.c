@@ -12,8 +12,8 @@ static char * help_text = "A continuación se muestran los comandos disponibles:
                         registers --> muestra el estado de los registros actualmente o cuando se los guardó por última vez\n\
                         time --> muestra la hora actual en formato hh:mm:ss\n\
                         eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar contra la compu\n\
-                        \t\t\t\to contra un amigo! El objetivo es sobrevivir más que tu oponente, mové tu serpiente con las flechas\n\
-                        \t\t\t\to con wasd, y no te choques con nada! Buena suerte!\n\
+                        \t\t\t\to contra un amigo! El objetivo es sobrevivir más que tu oponente, mové tu serpiente con\n\
+                        \t\t\t\twasd (jugador 1) o con ijkl (jugador 2), y no te choques con nada! Buena suerte!\n\
                         echo [string] --> imprime en pantalla el string pasado como argumento\n\
                         change_font --> cambia el tamaño de la fuente actual\n\
                         vim --> abre un editor de texto\n\
@@ -63,8 +63,7 @@ void startNanoShell()
 				break;
 			
 			case ELIMINATOR:
-                printf("Coming soon...");
-				//eliminator();
+				eliminator();
 				break;
 				
 			case ECHO:
@@ -79,8 +78,7 @@ void startNanoShell()
 				break;
 				
 			case CHANGE_FONT:
-                printf("Coming soon...");
-                //changeFontSize();
+                changeFontSize();
                 break;
 			
 			case VIM:
