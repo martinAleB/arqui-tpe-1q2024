@@ -32,3 +32,9 @@ void changeFontSize() {
     syscall(8, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall clear 
     syscall(10, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall change_font_size
 }
+
+void printCurrentTime() {
+    Timestamp ts = {0};
+    syscall(6, &ts, NULL_PARAM, NULL_PARAM);
+    printf("Current date: %d-%d-%d\nCurrent time: %d:%d:%d hs", ts.day, ts.month, ts.year, ts.hours, ts.minutes, ts.seconds);
+}

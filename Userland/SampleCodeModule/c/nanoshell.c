@@ -7,12 +7,12 @@
 
 static char * instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "vim", "test_exceptions"};
 
-static char * help_text = "A continuación se muestran los comandos disponibles:\n\
+static char * help_text = "A continuacion se muestran los comandos disponibles:\n\
                         help --> muestra todos los comandos disponibles a ejecutarse\n\
-                        registers --> muestra el estado de los registros actualmente o cuando se los guardó por última vez\n\
+                        registers --> muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
                         time --> muestra la hora actual en formato hh:mm:ss\n\
                         eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar contra la compu\n\
-                        \t\t\t\to contra un amigo! El objetivo es sobrevivir más que tu oponente, mové tu serpiente con\n\
+                        \t\t\t\to contra un amigo! El objetivo es sobrevivir mas que tu oponente, move tu serpiente con\n\
                         \t\t\t\twasd (jugador 1) o con ijkl (jugador 2), y no te choques con nada! Buena suerte!\n\
                         echo [string] --> imprime en pantalla el string pasado como argumento\n\
                         change_font --> cambia el tamaño de la fuente actual\n\
@@ -58,8 +58,7 @@ void startNanoShell()
 				break;
 			
 			case TIME:
-                printf("Coming soon...");
-				//showTime();
+				printCurrentTime();
 				break;
 			
 			case ELIMINATOR:
@@ -95,7 +94,9 @@ void startNanoShell()
 				printf("No se reconoce el comando: '%s'", cmdBuff);
 				break;
 		}
-        printf("\n");
+        if (interpret != CHANGE_FONT && interpret != ELIMINATOR) {
+            printf("\n");
+        }
 
     }
 }

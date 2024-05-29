@@ -2,6 +2,7 @@
 #define SYSCALLS_DISPATCHER_H
 
 #include <stdint.h>
+#include <rtc.h>
 
 typedef enum
 {

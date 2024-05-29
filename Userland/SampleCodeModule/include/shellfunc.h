@@ -4,5 +4,6 @@
 void getRegisters();
 void changeFontSize();
 void startNanoShell();
+void printCurrentTime();
 
 #endif
