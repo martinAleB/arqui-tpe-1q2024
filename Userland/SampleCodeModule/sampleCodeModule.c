@@ -1,6 +1,8 @@
 /* sampleCodeModule.c */
 #include <standardlib.h>
+#include <nanoshell.h>
 #include <eliminator.h>
+
 char *v = (char *)0xB8000 + 79 * 2;
 
 static int var1 = 0;
@@ -55,6 +57,7 @@ int main()
 	c = getChar();
 	printf("Se guardo con getChar y putChar imprime: ");
 	putChar(c); */
+	/* printf("Ingrese un caracter: ");
 	eliminator();
 	fdprintf(STDMARK, "Podemos imprimir en verde %u veces y todas las veces que queramos\n", 33);
 	printf("Ingrese un caracter: ");
@@ -93,7 +96,8 @@ int main()
 	else
 	{
 		printf("This was scanned:\nInt = %d\nString = %s\nUnsigned int = %u\nCharacter = %c\n", num, buff, num2, c1);
-	}
+	} */
+	startNanoShell();
 	//  Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)
 		return 0xDEADC0DE;

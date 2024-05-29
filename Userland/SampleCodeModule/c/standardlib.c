@@ -68,8 +68,9 @@ static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
     return mult * unsigned_str_to_num(it, buff_length, buff);
 }
 
-static uint64_t readToEnter(unsigned char buff[MAX_CHARS])
+uint64_t readLine(char buff[])
 {
+    // @TODO: validar MAX_CHARS?
     uint64_t i = 0;
     while ((buff[i] = getc()) != '\n')
     {
@@ -215,7 +216,7 @@ uint64_t scanf(const char *fmt, ...)
     {
         if (j == buffSize)
         {
-            buffSize = readToEnter(buffer);
+            buffSize = readLine(buffer);
             j = 0;
         }
         if (buffer[j] == ' ')
@@ -282,8 +283,34 @@ uint8_t getc()
 uint8_t getChar()
 {
     uint8_t buff[MAX_CHARS];
-    readToEnter(buff);
+    readLine(buff);
     return buff[0];
+}
+
+//Debería retornar int o algo más específico?
+int strcmp(char * s1, char *s2) {
+	int i, toReturn=0, checked=0;
+	for (i=0; s1[i] && s2[i] ; i++) {
+		if (!checked) {
+            toReturn += (s1[i] - s2[i]);
+            checked = toReturn==0? 0 : 1;
+        }
+	}
+    //Hotfix para que un string vacío no sea igual a todo
+    if (s1[i]) {
+        toReturn = s1[i];
+    } 
+    else if(s2[i]) {
+        toReturn = s2[i];
+    }
+	return toReturn;
+}
+
+void toMinus(char * str) {
+    for (int i=0; str[i]; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+            str[i] += ('a' - 'A');
+    }
 }
 
 void wait(uint32_t ticks){

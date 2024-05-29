@@ -4,6 +4,9 @@
 #include <keyboardDriver.h>
 #include <videoDriver.h>
 #include <interrupts.h>
+#include <registers.h>
+
+#define REGISTERS 18
 #include <time.h>
 
 uint64_t syscallDispatcher(uint64_t id, ...)
@@ -11,8 +14,7 @@ uint64_t syscallDispatcher(uint64_t id, ...)
     va_list args;
     va_start(args, id);
     uint64_t ret;
-    switch (id)
-    {
+    switch (id){
     case 3:;
     case 4:;
         FileDescriptor fd = va_arg(args, FileDescriptor);
@@ -56,6 +58,10 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         // sys_change_font
         vdChangeFontSize();
         break;
+    case 11:;
+        uint64_t* arr = va_arg(args, uint64_t*);
+        ret = getRegBackup(arr);
+        break;
     }
     va_end(args);
     return ret;
@@ -72,8 +78,16 @@ uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
     }
     return i;
 }
+
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count)
 {
     uint32_t styleByFileDescriptor[] = {0, 0x00FFFFFF, 0x00FF0000, 0x0000FF00};
     return vdNPrintStyled(buffer, styleByFileDescriptor[fd], 0, count);
+}
+
+uint64_t getRegBackup(uint64_t* arr){
+    uint64_t* regs = getRegs();
+    for(int i = 0; i < REGISTERS; i++)
+        arr[i] = regs[i];
+    return isBackupDone();
 }
