@@ -53,6 +53,8 @@ void *initializeKernelBinary()
 int main()
 {
 	load_idt();
+	
+	setTickFrequency(120);
 
 	for (int i = 0; i < _384_WIDTH * _384_HEIGHT; i++)
 		drawRectangle(_384[i], (i % _384_WIDTH) * 4, 4 * (i / _384_WIDTH), (i % _384_WIDTH + 1) * 4, 4 * (i / _384_WIDTH + 1)); // putPixel (_384[i], i%_384_WIDTH, i/_384_WIDTH);
