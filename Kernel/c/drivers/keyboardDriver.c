@@ -54,7 +54,7 @@ static unsigned char keyValues[KEYS][2] = {
 	{'p', 'P'},
 	{'[', '{'},
 	{']', '}'},
-	{'\n', '\n'}, // por que habia 13, 13 antes?
+	{'\n', '\n'},
 	{0, 0},
 	{'a', 'A'},
 	{'s', 'S'},

@@ -14,11 +14,14 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 GLOBAL _irq60Handler
 
-GLOBAL _exception0Handler
+GLOBAL _exception00Handler
+GLOBAL _exception06Handler
 
 EXTERN irqDispatcher
 EXTERN syscallDispatcher
 EXTERN exceptionDispatcher
+EXTERN saveRegisters
+EXTERN getStackBase
 
 SECTION .text
 
@@ -75,13 +78,23 @@ SECTION .text
 
 
 %macro exceptionHandler 1
+	call saveRegisters
+
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
 	call exceptionDispatcher
 
 	popState
+
+	call getStackBase
+
+	mov [rsp+ 24], rax
+	mov rax, userland
+	mov [rsp],rax
+
 	iretq
+
 %endmacro
 
 
@@ -168,15 +181,19 @@ _irq60Handler:
 	iretq
 
 ;Zero Division Exception
-_exception0Handler:
+_exception00Handler:
 	exceptionHandler 0
+
+_exception06Handler:
+	exceptionHandler 6
 
 haltcpu:
 	cli
 	hlt
 	ret
 
+section .rodata
+	userland equ 0x400000
 
-
-SECTION .bss
+section .bss
 	aux resq 1

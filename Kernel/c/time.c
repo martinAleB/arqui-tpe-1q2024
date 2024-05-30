@@ -3,23 +3,31 @@
 
 static unsigned long ticks = 0;
 
-void timer_handler() {
+#define PIT_FREQ 1193182
+
+void timer_handler()
+{
 	ticks++;
 }
 
-int ticks_elapsed() {
+int ticks_elapsed()
+{
 	return ticks;
 }
 
-int seconds_elapsed() {
+int seconds_elapsed()
+{
 	return ticks / 18;
 }
-void sleep(uint32_t ticksToWait){
-    int ticksAtCallTime = ticks_elapsed();
-	while(ticks-ticksAtCallTime<ticksToWait);
+void sleep(uint32_t ticksToWait)
+{
+	int ticksAtCallTime = ticks_elapsed();
+	while (ticks - ticksAtCallTime < ticksToWait)
+		;
 }
-void setTickFrequency(uint16_t freq){
-	int ticks = 10193800/freq;
+void setTickFrequency(uint16_t freq)
+{
+	int ticks = PIT_FREQ / freq;
 	outb(0x43, 0xb6);
 	outb(0x40, (uint8_t)(ticks));
 	outb(0x40, (uint8_t)(ticks >> 8));
