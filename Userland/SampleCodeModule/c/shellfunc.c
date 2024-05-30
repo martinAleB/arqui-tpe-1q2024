@@ -5,6 +5,7 @@
 #define NULL_PARAM 0
 
 uint64_t syscall(uint64_t rax, uint64_t rbx, uint64_t rdx, uint64_t rcx);
+void throw_invalid_opcode();
 
 void getRegisters(){
     char* regName[] = {
@@ -31,4 +32,14 @@ void getRegisters(){
 void changeFontSize() {
     syscall(8, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall clear 
     syscall(10, NULL_PARAM, NULL_PARAM, NULL_PARAM); //Syscall change_font_size
+}
+
+void testZeroDivision(){
+    uint64_t divisor;
+    scanf("%d", &divisor);
+    uint64_t div = 4 / divisor;
+}
+
+void testInvalidOpcode(){
+    __asm__("UD2");
 }

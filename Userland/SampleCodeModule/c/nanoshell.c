@@ -33,8 +33,7 @@ typedef enum {
 static uint64_t readCommand(char * buff);
 static int interpret(char * command);
 
-void startNanoShell()
-{
+void startNanoShell(){
     char cmdBuff[CMD_MAX_CHARS] = {0};
     int exit = 0;
     while (!exit)
@@ -87,8 +86,7 @@ void startNanoShell()
 				break;
 				
 			case TEST_EXCEPTIONS:
-                printf("Coming soon...");
-                //test_exceptions();
+                testInvalidOpcode();
                 break;
 
 			case -1:

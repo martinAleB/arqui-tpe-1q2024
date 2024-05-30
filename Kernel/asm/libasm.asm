@@ -75,6 +75,7 @@ saveRegisters:
 	mov rdi, regsArr
 	call makeBackup
 	leave
+	
 	ret
 
 outb:

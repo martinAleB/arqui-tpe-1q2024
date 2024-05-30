@@ -1,4 +1,5 @@
 GLOBAL syscall
+GLOBAL throw_invalid_opcode
 
 SECTION .text
 
@@ -10,3 +11,6 @@ syscall:
     pop rbx
     ret
     
+throw_invalid_opcode:
+    ud2
+    ret

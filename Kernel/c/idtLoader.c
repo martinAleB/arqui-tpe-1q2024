@@ -26,7 +26,8 @@ void load_idt()
   setup_IDT_entry(0x80, (uint64_t)&_irq60Handler);
   setup_IDT_entry(0x21, (uint64_t)&_irq01Handler);
   setup_IDT_entry(0x20, (uint64_t)&_irq00Handler);
-  setup_IDT_entry(0x00, (uint64_t)&_exception0Handler);
+  setup_IDT_entry(0x06, (uint64_t)&_exception06Handler);
+  setup_IDT_entry(0x00, (uint64_t)&_exception00Handler);
 
   // Solo interrupcion timer tick habilitadas
   picMasterMask(0x00); // @TODO: VER QUE MASCARA HAY QUE APLICAR UNA VEZ QUE SE TENGAN TODAS LAS SYSCALLS
