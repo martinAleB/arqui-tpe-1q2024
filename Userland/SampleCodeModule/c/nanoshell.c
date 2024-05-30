@@ -11,9 +11,7 @@ static char * help_text = "A continuacion se muestran los comandos disponibles:\
                         help --> muestra todos los comandos disponibles a ejecutarse\n\
                         registers --> muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
                         time --> muestra la hora actual en formato hh:mm:ss\n\
-                        eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar contra la compu\n\
-                        \t\t\t\to contra un amigo! El objetivo es sobrevivir mas que tu oponente, move tu serpiente con\n\
-                        \t\t\t\twasd (jugador 1) o con ijkl (jugador 2), y no te choques con nada! Buena suerte!\n\
+                        eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2\n\
                         echo [string] --> imprime en pantalla el string pasado como argumento\n\
                         change_font --> cambia el tamaño de la fuente actual\n\
                         vim --> abre un editor de texto\n\
@@ -99,12 +97,6 @@ void startNanoShell()
         }
 
     }
-}
-
-//Hace falta?
-static uint64_t readCommand(char * buff)
-{
-    return readLine(buff);
 }
 
 static int interpret(char * command) {
