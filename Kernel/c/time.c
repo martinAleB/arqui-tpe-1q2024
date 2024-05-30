@@ -1,4 +1,4 @@
-#include <time.h>
+#include <rtc.h>
 #include <stdint.h>
 
 static unsigned long ticks = 0;

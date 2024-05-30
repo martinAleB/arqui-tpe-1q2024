@@ -5,9 +5,20 @@
 #include <videoDriver.h>
 #include <interrupts.h>
 #include <registers.h>
+#include <rtc.h>
+#include <soundDriver.h>
+#include <lib.h>
 
 #define REGISTERS 18
-#include <time.h>
+#define NMI_DISABLE_BIT 1
+#define SECONDS_REG 0x00
+#define MINUTES_REG 0x02
+#define HOURS_REG 0x04
+#define DAY_REG 0x07
+#define MONTH_REG 0x08
+#define YEAR_REG 0x09
+#define REG_NEEDED 6
+#define GMT_OFFSET -3
 
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
@@ -33,6 +44,9 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     case 6:;
         // sys_rtc
+        Timestamp *ts = va_arg(args, Timestamp *);
+        getTime(ts);
+        ret = ts;
         break;
     case 7:;
         // sys_sleep
@@ -90,4 +104,31 @@ uint64_t getRegBackup(uint64_t* arr){
     for(int i = 0; i < REGISTERS; i++)
         arr[i] = regs[i];
     return isBackupDone();
+}
+
+
+
+static  uint8_t bcd_decimal(uint8_t hex)
+{
+    //assert(((hex & 0xF0) >> 4) < 10);  // More significant nybble is valid
+    //assert((hex & 0x0F) < 10);         // Less significant nybble is valid
+    int dec = ((hex & 0xF0) >> 4) * 10 + (hex & 0x0F);
+    return dec;
+}   
+
+//Recibe un TimeStamp* y debe dejar allí año, mes, día, hora, minutos, segundos
+void getTime(Timestamp* ts) {
+    uint8_t regNeeded[] = {SECONDS_REG, MINUTES_REG, HOURS_REG, DAY_REG, MONTH_REG, YEAR_REG};
+    uint8_t data[REG_NEEDED];
+    for (int i=0; i<REG_NEEDED; i++) {
+        outb(0x70, (NMI_DISABLE_BIT << 7) | (regNeeded[i]));
+        //timer_wait(10);
+        data[i] = inb(0x71);
+    }
+    ts->seconds = bcd_decimal(data[0]);
+    ts->minutes = bcd_decimal(data[1]);
+    ts->hours = bcd_decimal(data[2])+GMT_OFFSET;
+    ts->day =  bcd_decimal(data[3]-((ts->hours > 21)? 1 :0));
+    ts->month = bcd_decimal(data[4]);
+    ts->year = bcd_decimal(data[5]);
 }

@@ -1,5 +1,6 @@
 #include <soundDriver.h>
 #include <stdint.h>
+#include <lib.h>
 
 static void play_sound(uint32_t nFrequence)
 {
@@ -29,7 +30,7 @@ static void nosound()
 	outb(0x61, tmp);
 }
 
-static void timer_wait(int ticks)
+void timer_wait(int ticks)
 {
 	int now = ticks_elapsed();
 	while (ticks_elapsed() - now < ticks)

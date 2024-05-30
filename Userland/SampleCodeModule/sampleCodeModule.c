@@ -97,6 +97,8 @@ int main()
 	{
 		printf("This was scanned:\nInt = %d\nString = %s\nUnsigned int = %u\nCharacter = %c\n", num, buff, num2, c1);
 	} */
+	//Timestamp ts;
+	//syscall(6,&ts,0,0);
 	startNanoShell();
 	//  Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)

@@ -1,5 +1,7 @@
 #include <keyboardDriver.h>
 #include <lib.h>
+#include <rtc.h>
+
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
