@@ -44,6 +44,7 @@ void printCurrentTime()
     printf("Current date: %d-%d-%d\nCurrent time: %d:%d:%d hs", ts.day, ts.month, ts.year, ts.hours, ts.minutes, ts.seconds);
 }
 
+// @TODO: VER SI BORRAR TESTS O NO
 void testZeroDivision()
 {
     uint64_t divisor;
