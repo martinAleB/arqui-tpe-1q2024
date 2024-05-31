@@ -6,15 +6,17 @@ uint64_t syscall(uint64_t rax, uint64_t rbx, uint64_t rdx, uint64_t rcx);
 #define MAX_CHARS 1000
 #define MAX_NUMBER_LENGTH 100
 
-uint64_t getNextToRead(char *c){
+uint64_t getNextToRead(char *c)
+{
     return syscall(3, 1, 1, c);
 }
 
 static void unsigned_num_to_str(uint32_t num, uint32_t start, char *buff)
-{   
-    
+{
+
     uint32_t i = start;
-    if(num==0)buff[i++]='0';
+    if (num == 0)
+        buff[i++] = '0';
     while (i < MAX_NUMBER_LENGTH - 1 && num > 0)
     {
         buff[i++] = (num % 10) + '0';
@@ -195,14 +197,10 @@ uint64_t printf(const char *fmt, ...)
     return toRet;
 }
 
-// @TODO: ARREGLAR SCANF
 uint64_t scanf(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-
-    // char buff[MAX_CHARS] = {0};
-    // uint64_t buff_length = syscall(3, 1, MAX_CHARS, buff);
 
     char buffer[MAX_CHARS] = {0};
     char auxBuffer[100] = {0};
@@ -211,7 +209,7 @@ uint64_t scanf(const char *fmt, ...)
     int32_t *int_dir;
 
     uint64_t buffSize = 0;
-    // Ahora leo de este buffer de igual manera que antes
+
     for (i = 0, j = 0, count_read = 0; fmt[i] != 0;)
     {
         if (j == buffSize)
@@ -238,7 +236,6 @@ uint64_t scanf(const char *fmt, ...)
                     count_read++;
                     break;
                 case 'd':;
-                    // VER QUE PASA CON LOS INTS QUE NO SE LEEN BIEN
                     int_dir = va_arg(args, int32_t *);
                     *int_dir = signed_str_to_num(&j, buffSize, buffer);
                     i++;
@@ -287,36 +284,43 @@ uint8_t getChar()
     return buff[0];
 }
 
-//Debería retornar int o algo más específico?
-int strcmp(char * s1, char *s2) {
-	int i, toReturn=0, checked=0;
-	for (i=0; s1[i] && s2[i] ; i++) {
-		if (!checked) {
+int strcmp(char *s1, char *s2)
+{
+    int i, toReturn = 0, checked = 0;
+    for (i = 0; s1[i] && s2[i]; i++)
+    {
+        if (!checked)
+        {
             toReturn += (s1[i] - s2[i]);
-            checked = toReturn==0? 0 : 1;
+            checked = toReturn == 0 ? 0 : 1;
         }
-	}
-    //Hotfix para que un string vacío no sea igual a todo
-    if (s1[i]) {
+    }
+    if (s1[i])
+    {
         toReturn = s1[i];
-    } 
-    else if(s2[i]) {
+    }
+    else if (s2[i])
+    {
         toReturn = s2[i];
     }
-	return toReturn;
+    return toReturn;
 }
 
-void toMinus(char * str) {
-    for (int i=0; str[i]; i++) {
+void toMinus(char *str)
+{
+    for (int i = 0; str[i]; i++)
+    {
         if (str[i] >= 'A' && str[i] <= 'Z')
             str[i] += ('a' - 'A');
     }
 }
 
-void wait(uint32_t ticks){
-    syscall(7,ticks,0,0);
+void wait(uint32_t ticks)
+{
+    syscall(7, ticks, 0, 0);
 }
 
-void beep(uint32_t hz, uint32_t ticks){
-    syscall(9,ticks,0,hz);
+void beep(uint32_t hz, uint32_t ticks)
+{
+    syscall(9, ticks, 0, hz);
 }
