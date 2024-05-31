@@ -16,6 +16,8 @@
 #define SMALL_FONT 1
 #define LARGE_FONT 2
 
+#define BITS_PER_PIXEL 3
+
 /*************************************
 **
 ** DECLARACIONES DE FUNCIONES
@@ -45,12 +47,13 @@ void drawRectangle(uint32_t color, uint16_t up_l_x, uint16_t up_l_y, uint16_t lo
 **
 **************************************/
 
-typedef struct{
+typedef struct
+{
     uint16_t up_l_x;
     uint16_t up_l_y;
     uint16_t lo_r_y;
     uint16_t lo_r_x;
-	uint32_t color;
+    uint32_t color;
 } Rectangle;
 
 #endif
