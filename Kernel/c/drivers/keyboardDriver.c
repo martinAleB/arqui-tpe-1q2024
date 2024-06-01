@@ -140,7 +140,6 @@ void writeIntoBuffer()
 			int index;
 			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
 			{
-				// if (capsLock == 1)
 				index = capsLock ? !shift : shift;
 			}
 			else
