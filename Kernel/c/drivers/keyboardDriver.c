@@ -1,7 +1,7 @@
 #include <keyboardDriver.h>
 #include <lib.h>
 #include <rtc.h>
-
+#include <videoDriver.h>
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
@@ -18,7 +18,7 @@
 #define R_SHIFT_PRESS 0x36
 #define R_SHIFT_RELEASE 0xB6
 #define CAPS_LOCK_PRESS 0x3A
-#define ALT_PRESS 0x3B		//ALT PARA GUARDAR REGISTROS
+#define ALT_PRESS 0x3B // ALT PARA GUARDAR REGISTROS
 #define ALT_RELEASE 0xB8
 
 // TODO
@@ -120,14 +120,15 @@ void writeIntoBuffer()
 		shift = 0;
 		break;
 	case CAPS_LOCK_PRESS:
-		capsLock = (capsLock + 1) % 2;
+		capsLock = 1 - capsLock;
 		break;
 	case ESC:
 		registerPressed = 1;
 		break;
 	}
 
-	if(registerPressed){
+	if (registerPressed)
+	{
 		saveRegisters();
 		registerPressed = 0;
 	}
@@ -136,12 +137,17 @@ void writeIntoBuffer()
 	{
 		if (!isSpecialKey(key))
 		{
+			int index;
 			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
 			{
-				if (capsLock == 1)
-					shift = shift ? 0 : 1;
+				// if (capsLock == 1)
+				index = capsLock ? !shift : shift;
 			}
-			buffer[currentKey++] = keyValues[key][shift];
+			else
+			{
+				index = shift;
+			}
+			buffer[currentKey++] = keyValues[key][index];
 		}
 	}
 	else

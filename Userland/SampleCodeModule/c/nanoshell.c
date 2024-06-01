@@ -35,12 +35,12 @@ static int interpret(char *command);
 
 void startNanoShell()
 {
-    char cmdBuff[CMD_MAX_CHARS] = {0};
+    char cmdBuff[CMD_MAX_CHARS + 1] = {0};
     int exit = 0;
     while (!exit)
     {
         fdprintf(STDMARK, PROMPT);
-        int command_length = readLine(cmdBuff);
+        int command_length = readLine(cmdBuff, CMD_MAX_CHARS);
 
         int interpretation = interpret(cmdBuff);
 
@@ -71,10 +71,12 @@ void startNanoShell()
                 i++;
             }
             i++;
-            for (int j = 0; cmdBuff[i]; i++, j++)
+            int j;
+            for (j = 0; cmdBuff[i]; i++, j++)
             {
                 toPrint[j] = cmdBuff[i];
             }
+            toPrint[j] = 0;
             printf(toPrint);
             break;
 

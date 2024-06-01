@@ -70,27 +70,42 @@ static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
     return mult * unsigned_str_to_num(it, buff_length, buff);
 }
 
-uint64_t readLine(char buff[])
+uint64_t readLine(char buff[], uint64_t count)
 {
-    // @TODO: validar MAX_CHARS?
     uint64_t i = 0;
-    while ((buff[i] = getc()) != '\n')
+    uint8_t c;
+    while ((c = getc()) != '\n')
     {
-        if (buff[i] == '\b')
+        if (i < count)
+        {
+            buff[i] = c;
+        }
+        if (c == '\b')
         {
             if (i > 0)
             {
-                i += putChar(buff[i]);
-                buff[i] = 0;
+                i += putChar(c);
+                if (i < count)
+                    buff[i] = 0;
             }
         }
         else
         {
-            i += putChar(buff[i]);
+            i += putChar(c);
         }
     }
     putChar('\n');
-    buff[i] = 0;
+    uint64_t toRet;
+    if (i < count)
+    {
+        buff[i] = 0;
+        toRet = i;
+    }
+    else
+    {
+        buff[count] = 0;
+        toRet = count;
+    }
     return i;
 }
 
@@ -202,7 +217,7 @@ uint64_t scanf(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
 
-    char buffer[MAX_CHARS] = {0};
+    char buffer[MAX_CHARS + 1] = {0};
     char auxBuffer[100] = {0};
     uint64_t i, j, count_read;
     uint8_t *char_dir;
@@ -214,7 +229,7 @@ uint64_t scanf(const char *fmt, ...)
     {
         if (j == buffSize)
         {
-            buffSize = readLine(buffer);
+            buffSize = readLine(buffer, MAX_CHARS);
             j = 0;
         }
         if (buffer[j] == ' ')
@@ -279,8 +294,8 @@ uint8_t getc()
 
 uint8_t getChar()
 {
-    uint8_t buff[MAX_CHARS];
-    readLine(buff);
+    uint8_t buff[MAX_CHARS + 1];
+    readLine(buff, MAX_CHARS);
     return buff[0];
 }
 

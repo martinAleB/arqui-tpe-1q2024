@@ -10,7 +10,8 @@ typedef enum
     STDMARK,
 } FileDescriptor;
 
-typedef struct {
+typedef struct
+{
     uint8_t seconds;
     uint8_t minutes;
     uint8_t hours;
@@ -22,12 +23,12 @@ typedef struct {
 uint64_t fdprintf(FileDescriptor fd, const char *fmt, ...);
 uint64_t printf(const char *fmt, ...);
 uint64_t scanf(const char *fmt, ...);
-uint64_t readLine(char buff[]);
+uint64_t readLine(char buff[], uint64_t count);
 uint64_t putChar(uint64_t character);
 uint8_t getChar();
 uint8_t getc();
-int strcmp(char * s1, char *s2);
-void toMinus(char * str);
+int strcmp(char *s1, char *s2);
+void toMinus(char *str);
 uint64_t getNextToRead(char *c);
 void beep(uint32_t hz, uint32_t ticks);
 
