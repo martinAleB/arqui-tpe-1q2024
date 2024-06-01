@@ -1,7 +1,6 @@
 #include <keyboardDriver.h>
 #include <lib.h>
-#include <rtc.h>
-
+#include <videoDriver.h>
 
 #define KEYS 58
 #define MAX_PRESS_KEY 0x70 // Los valores superiores son los release de las teclas
@@ -18,7 +17,7 @@
 #define R_SHIFT_PRESS 0x36
 #define R_SHIFT_RELEASE 0xB6
 #define CAPS_LOCK_PRESS 0x3A
-#define ALT_PRESS 0x3B		//ALT PARA GUARDAR REGISTROS
+#define ALT_PRESS 0x3B // ALT PARA GUARDAR REGISTROS
 #define ALT_RELEASE 0xB8
 
 // TODO
@@ -120,14 +119,15 @@ void writeIntoBuffer()
 		shift = 0;
 		break;
 	case CAPS_LOCK_PRESS:
-		capsLock = (capsLock + 1) % 2;
+		capsLock = 1 - capsLock;
 		break;
 	case ESC:
 		registerPressed = 1;
 		break;
 	}
 
-	if(registerPressed){
+	if (registerPressed)
+	{
 		saveRegisters();
 		registerPressed = 0;
 	}
@@ -136,12 +136,16 @@ void writeIntoBuffer()
 	{
 		if (!isSpecialKey(key))
 		{
+			int index;
 			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
 			{
-				if (capsLock == 1)
-					shift = shift ? 0 : 1;
+				index = capsLock ? !shift : shift;
 			}
-			buffer[currentKey++] = keyValues[key][shift];
+			else
+			{
+				index = shift;
+			}
+			buffer[currentKey++] = keyValues[key][index];
 		}
 	}
 	else
@@ -160,116 +164,3 @@ unsigned char nextFromBuffer()
 	nextToRead %= BUFFER_SIZE;
 	return toRet;
 }
-/* void getKey()
-{
-
-	unsigned int key;
-	int shift = 0;
-	int capsLock = 0;
-
-	key = getKeyPressed();
-
-	switch (key)
-	{
-	case R_SHIFT_PRESS:
-	case L_SHIFT_PRESS:
-		shift = 1;
-		break;
-	case R_SHIFT_RELEASE:
-	case L_SHIFT_RELEASE:
-		shift = 0;
-		break;
-	case CAPS_LOCK_PRESS:
-		capsLock = (capsLock + 1) % 2;
-		break;
-	case BACKSPACE:
-		vdDelete();
-		break;
-	case ENTER:
-		vdNewline();
-		break;
-	case TAB:
-		for (int i = 0; i < TAB_NUM; i++)
-			vdPrintChar(' ');
-		break;
-	}
-
-	int shifted = shift;
-
-	if (key < MAX_PRESS_KEY)
-	{
-		if (!isSpecialKey(key))
-		{
-			if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
-			{
-				if (capsLock == 1)
-					shifted = shifted ? 0 : 1;
-			}
-			vdPrintChar(keyValues[key][shifted]);
-		}
-	}
-} */
-
-/* uint64_t readBuffer(char *buffer, uint64_t count)
-{
-	uint16_t key;
-	uint8_t shift = 0;
-	uint8_t capsLock = 0;
-	uint8_t isEnter = 0;
-	uint64_t it = 0;
-	while (!isEnter)
-	{
-		key = getKeyPressed();
-		switch (key)
-		{
-		case R_SHIFT_PRESS:
-		case L_SHIFT_PRESS:
-			shift = 1;
-			break;
-		case R_SHIFT_RELEASE:
-		case L_SHIFT_RELEASE:
-			shift = 0;
-			break;
-		case CAPS_LOCK_PRESS:
-			capsLock = (capsLock + 1) % 2;
-			break;
-		case BACKSPACE:
-			if (it > 0)
-			{
-				it--;
-				vdDelete();
-			}
-			break;
-		case ENTER:
-			vdNewline();
-			isEnter = 1;
-			break;
-		case TAB:
-			for (int i = 0; i < TAB_NUM; i++)
-			{
-				vdPrintChar(' ');
-				if (it < count)
-					buffer[it++] = ' ';
-			}
-			break;
-		}
-
-		int shifted = shift;
-
-		if (key < MAX_PRESS_KEY)
-		{
-			if (!isSpecialKey(key))
-			{
-				if (keyValues[key][0] >= 'a' && keyValues[key][0] <= 'z')
-				{
-					if (capsLock == 1)
-						shifted = shifted ? 0 : 1;
-				}
-				vdPrintChar(keyValues[key][shifted]);
-				if (it < count)
-					buffer[it++] = keyValues[key][shifted];
-			}
-		}
-	}
-	return it;
-} */

@@ -111,12 +111,9 @@ uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 	else
 		hexData = getLargeCharHexData(c);
 
-	// Hotfix: si se termina la pantalla vuelve a empezar de arriba
 	if (y > (SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE))
 	{
-		// vdClear();
 		vdScroll();
-		// y = SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE;
 		y--;
 	}
 
@@ -191,10 +188,6 @@ void vdClear()
 void vdScroll()
 {
 	uint8_t *framebuffer = (uint8_t *)VBE_mode_info->framebuffer;
-	/* for (int i = 24576 * size, j = 73728 * size; j < 2359296; i++, j++)
-		framebuffer[i] = framebuffer[j];
-	for (int i = 2359296 - 3 * 24576 * size; i < 2359296; i++)
-		framebuffer[i] = 0; */
 	for (int i = SCREEN_WIDTH_PIXELS * (HEIGHT_S * BITS_PER_PIXEL * MARGIN_SIZE) / 2 * size, j = SCREEN_WIDTH_PIXELS * (HEIGHT_S * BITS_PER_PIXEL * (2 + MARGIN_SIZE)) / 2 * size; j < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL; i++, j++)
 		framebuffer[i] = framebuffer[j];
 	for (int i = SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL * (SCREEN_HEIGHT_PIXELS - size * (HEIGHT_S * (2 + MARGIN_SIZE)) / 2); i < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL; i++)
@@ -202,9 +195,26 @@ void vdScroll()
 }
 void vdDelete()
 { // pensar si lo schequeos van aca o en el keyboard driver
-	x--;
+
+	if (x == 0)
+	{
+		y--;
+		x = (SCREEN_WIDTH_PIXELS / (WIDTH_S * size) - 2 * MARGIN_SIZE) - 1;
+	}
+	else
+	{
+		x--;
+	}
 	vdPrintChar(' ');
-	x--;
+	if (x == 0)
+	{
+		y--;
+		x = (SCREEN_WIDTH_PIXELS / (WIDTH_S * size) - 2 * MARGIN_SIZE) - 1;
+	}
+	else
+	{
+		x--;
+	}
 }
 void vdChangeFontSize()
 {

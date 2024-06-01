@@ -4,19 +4,20 @@
 #define CMD_MAX_CHARS 1000
 #define CMD_NAME_MAX_CHARS 100
 #define FUNCTION_NUM 8
-#define PROMPT "NanoShell<33> $> "
+#define PROMPT "NanoShell $> "
 
 static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "test_zero_division", "test_invalid_opcode"};
 
 // @TODO: CAMBIAR COMANDO TEST_EXCEPTIONS POR COMANDOS DE INVALID OPCODE Y ZERO DIVISION
 static char *help_text = "A continuacion se muestran los comandos disponibles:\n\
-                        help --> muestra todos los comandos disponibles a ejecutarse\n\
-                        registers --> muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
-                        time --> muestra la hora actual en formato hh:mm:ss\n\
-                        eliminator --> inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2\n\
-                        echo [string] --> imprime en pantalla el string pasado como argumento\n\
-                        change_font --> cambia el tamaño de la fuente actual\n\
-                        test_exceptions --> testea las excepciones manejadas";
+help --> Muestra todos los comandos disponibles a ejecutarse.\n\
+registers --> Muestra el estado de los registros actualmente o cuando se los guardo por ultima vez.\n\
+time --> Muestra la hora actual en formato hh:mm:ss.\n\
+eliminator --> Inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2.\n\
+echo [string] --> Imprime en pantalla el string pasado como argumento.\n\
+change_font --> Cambia el tamaño de la fuente actual.\n\
+test_zero_division --> Testea la excepcion de division por 0.\n\
+test_invalid_opcode --> Testea la excepcion de invalid opcode.";
 
 typedef enum
 {
@@ -35,12 +36,12 @@ static int interpret(char *command);
 
 void startNanoShell()
 {
-    char cmdBuff[CMD_MAX_CHARS] = {0};
+    char cmdBuff[CMD_MAX_CHARS + 1] = {0};
     int exit = 0;
     while (!exit)
     {
         fdprintf(STDMARK, PROMPT);
-        int command_length = readLine(cmdBuff);
+        int command_length = readLine(cmdBuff, CMD_MAX_CHARS);
 
         int interpretation = interpret(cmdBuff);
 
@@ -71,10 +72,12 @@ void startNanoShell()
                 i++;
             }
             i++;
-            for (int j = 0; cmdBuff[i]; i++, j++)
+            int j;
+            for (j = 0; cmdBuff[i]; i++, j++)
             {
                 toPrint[j] = cmdBuff[i];
             }
+            toPrint[j] = 0;
             printf(toPrint);
             break;
 
