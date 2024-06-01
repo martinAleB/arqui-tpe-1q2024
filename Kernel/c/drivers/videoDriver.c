@@ -51,10 +51,15 @@ typedef struct vbe_mode_info_structure *VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr)0x0000000000005C00;
 
+static uint64_t getOffset(uint64_t x, uint64_t y)
+{
+	return (x * ((VBE_mode_info->bpp) / 8)) + (y * VBE_mode_info->pitch);
+}
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y)
 {
 	uint8_t *framebuffer = (uint8_t *)VBE_mode_info->framebuffer;
-	uint64_t offset = (x * ((VBE_mode_info->bpp) / 8)) + (y * VBE_mode_info->pitch);
+	uint64_t offset = getOffset(x, y);
 	framebuffer[offset] = (hexColor) & 0xFF;
 	framebuffer[offset + 1] = (hexColor >> 8) & 0xFF;
 	framebuffer[offset + 2] = (hexColor >> 16) & 0xFF;
@@ -105,6 +110,16 @@ uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 		hexData = getCharHexData(c);
 	else
 		hexData = getLargeCharHexData(c);
+
+	// Hotfix: si se termina la pantalla vuelve a empezar de arriba
+	if (y > (SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE))
+	{
+		// vdClear();
+		vdScroll();
+		// y = SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE;
+		y--;
+	}
+
 	for (int i = 0; i < WIDTH_S * size; i++)
 	{
 		for (int j = 0; j < HEIGHT_S * size; j++)
@@ -123,12 +138,6 @@ uint64_t vdPrintCharStyled(char c, uint32_t color, uint32_t bgColor)
 		x = 0;
 	}
 
-	//Hotfix: si se termina la pantalla vuelve a empezar de arriba
-	if (y > (SCREEN_HEIGHT_PIXELS / (size * HEIGHT_S) - 2 * MARGIN_SIZE)) {
-		vdClear();
-		y=0;
-	}
-	
 	return 1;
 }
 
@@ -178,6 +187,18 @@ void vdClear()
 	for (int i = 0; i < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS; i++)
 		putPixel(0, i % SCREEN_WIDTH_PIXELS, i / SCREEN_WIDTH_PIXELS);
 	x = y = 0;
+}
+void vdScroll()
+{
+	uint8_t *framebuffer = (uint8_t *)VBE_mode_info->framebuffer;
+	/* for (int i = 24576 * size, j = 73728 * size; j < 2359296; i++, j++)
+		framebuffer[i] = framebuffer[j];
+	for (int i = 2359296 - 3 * 24576 * size; i < 2359296; i++)
+		framebuffer[i] = 0; */
+	for (int i = SCREEN_WIDTH_PIXELS * (HEIGHT_S * BITS_PER_PIXEL * MARGIN_SIZE) / 2 * size, j = SCREEN_WIDTH_PIXELS * (HEIGHT_S * BITS_PER_PIXEL * (2 + MARGIN_SIZE)) / 2 * size; j < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL; i++, j++)
+		framebuffer[i] = framebuffer[j];
+	for (int i = SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL * (SCREEN_HEIGHT_PIXELS - size * (HEIGHT_S * (2 + MARGIN_SIZE)) / 2); i < SCREEN_HEIGHT_PIXELS * SCREEN_WIDTH_PIXELS * BITS_PER_PIXEL; i++)
+		framebuffer[i] = 0;
 }
 void vdDelete()
 { // pensar si lo schequeos van aca o en el keyboard driver

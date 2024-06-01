@@ -30,7 +30,7 @@ void load_idt()
   setup_IDT_entry(0x00, (uint64_t)&_exception00Handler);
 
   // Solo interrupcion timer tick habilitadas
-  picMasterMask(0x00); // @TODO: VER QUE MASCARA HAY QUE APLICAR UNA VEZ QUE SE TENGAN TODAS LAS SYSCALLS
+  picMasterMask(0xFC);
   picSlaveMask(0xFF);
 
   _sti();

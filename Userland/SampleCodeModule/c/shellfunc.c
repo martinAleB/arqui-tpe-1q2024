@@ -5,6 +5,7 @@
 #define NULL_PARAM 0
 
 uint64_t syscall(uint64_t rax, uint64_t rbx, uint64_t rdx, uint64_t rcx);
+void throw_zero_division();
 void throw_invalid_opcode();
 
 void getRegisters()
@@ -44,15 +45,12 @@ void printCurrentTime()
     printf("Current date: %d-%d-%d\nCurrent time: %d:%d:%d hs", ts.day, ts.month, ts.year, ts.hours, ts.minutes, ts.seconds);
 }
 
-// @TODO: VER SI BORRAR TESTS O NO
 void testZeroDivision()
 {
-    uint64_t divisor;
-    scanf("%d", &divisor);
-    uint64_t div = 4 / divisor;
+    throw_zero_division();
 }
 
 void testInvalidOpcode()
 {
-    __asm__("UD2");
+    throw_invalid_opcode();
 }

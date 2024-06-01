@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 static unsigned long ticks = 0;
+static int frequency = 18;
 
 #define PIT_FREQ 1193182
 
@@ -17,7 +18,7 @@ int ticks_elapsed()
 
 int seconds_elapsed()
 {
-	return ticks / 18;
+	return ticks / frequency;
 }
 void sleep(uint32_t ticksToWait)
 {
@@ -27,6 +28,7 @@ void sleep(uint32_t ticksToWait)
 }
 void setTickFrequency(uint16_t freq)
 {
+	frequency = freq;
 	int ticks = PIT_FREQ / freq;
 	outb(0x43, 0xb6);
 	outb(0x40, (uint8_t)(ticks));

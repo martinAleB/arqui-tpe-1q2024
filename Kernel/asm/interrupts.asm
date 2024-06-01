@@ -184,6 +184,7 @@ _irq60Handler:
 _exception00Handler:
 	exceptionHandler 0
 
+;Invalid Opcode Exception
 _exception06Handler:
 	exceptionHandler 6
 
