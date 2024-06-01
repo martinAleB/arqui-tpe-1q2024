@@ -7,7 +7,33 @@ GLOBAL saveRegisters
 EXTERN makeBackup
 
 section .text
+
+%macro saveRegistersMacro 1
+	mov [%1], rax
+	mov [%1 + 1*8], rbx
+	mov [%1 + 2*8], rcx
+	mov [%1 + 3*8], rdx
+	mov [%1 + 4*8], rsi
+	mov [%1 + 5*8], rdi
+	mov [%1 + 6*8], rbp
+	mov [%1 + 7*8], r8
+	mov [%1 + 8*8], r9
+	mov [%1 + 9*8], r10
+	mov [%1 + 10*8], r11
+	mov [%1 + 11*8], r12
+	mov [%1 + 12*8], r13
+	mov [%1 + 13*8], r14
+	mov [%1 + 14*8], r15
+	mov [%1 + 15*8], rsp
+	mov rax, [rsp]    				;RIP
+    mov [%1 + 16*8], rax
+    mov rax, [rsp+8]  				;RFLAGS
+    mov [%1 + 17*8], rax
 	
+	mov rdi, %1
+	call makeBackup
+%endmacro	
+
 cpuVendor:
 	push rbp
 	mov rbp, rsp
@@ -50,31 +76,7 @@ getKeyPressed:
     ret
 
 saveRegisters:
-	enter 0,0
-	mov [regsArr], rax
-	mov [regsArr + 1*8], rbx
-	mov [regsArr + 2*8], rcx
-	mov [regsArr + 3*8], rdx
-	mov [regsArr + 4*8], rsi
-	mov [regsArr + 5*8], rdi
-	mov [regsArr + 6*8], rbp
-	mov [regsArr + 7*8], r8
-	mov [regsArr + 8*8], r9
-	mov [regsArr + 9*8], r10
-	mov [regsArr + 10*8], r11
-	mov [regsArr + 11*8], r12
-	mov [regsArr + 12*8], r13
-	mov [regsArr + 13*8], r14
-	mov [regsArr + 14*8], r15
-	mov [regsArr + 15*8], rsp
-	mov rax, [rsp]    				;RIP
-    mov [regsArr + 16*8], rax
-    mov rax, [rsp+8]  				;RFLAGS
-    mov [regsArr + 17*8], rax
-	
-	mov rdi, regsArr
-	call makeBackup
-	leave
+	saveRegistersMacro regsArr
 	
 	ret
 
@@ -90,4 +92,4 @@ inb:
 	ret
 
 section .bss
-    regsArr: resb 144
+    regsArr resb 144
