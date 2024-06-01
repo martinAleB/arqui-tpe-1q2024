@@ -30,6 +30,7 @@ uint8_t speed = 1;
 uint8_t p2Present = 1;
 uint64_t p1wins = 0;
 uint64_t p2wins = 0;
+uint64_t singlePlayerDeaths = 0;
 
 typedef struct
 {
@@ -141,10 +142,7 @@ void settings()
     do
     {
         getNextToRead(&c);
-        if (c == 'y')
-            p2Present = 1;
-        if (c == 'n')
-            p2Present = 0;
+        p2Present = c == 'y';
     } while (c != 'y' && c != 'n');
     printf("Select your speed from 1 to 4\n");
     do
@@ -179,6 +177,7 @@ void eliminator()
             clearScreen();
             p1wins = 0;
             p2wins = 0;
+            singlePlayerDeaths = 0;
             return;
         }
     }
@@ -195,11 +194,23 @@ void game()
     while (!p1.lost && !p2.lost)
         play(&p1, &p2);
     if (p1.lost)
-        p2wins++;
+    {
+        if (p2Present)
+            p2wins++;
+        else
+            singlePlayerDeaths++;
+    }
     else
         p1wins++;
-    printf("P1 SCORE : %d ", p1wins);
-    printf("P2 SCORE : %d \n", p2wins);
+    if (p2Present)
+    {
+        printf("P1 SCORE : %d ", p1wins);
+        printf("P2 SCORE : %d \n", p2wins);
+    }
+    else
+    {
+        printf("P1 DEATHS : %d\n", p2wins);
+    }
     beep(192, 30);
     eliminator();
     clearScreen();
