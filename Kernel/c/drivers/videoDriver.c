@@ -194,8 +194,7 @@ void vdScroll()
 		framebuffer[i] = 0;
 }
 void vdDelete()
-{ // pensar si lo schequeos van aca o en el keyboard driver
-
+{
 	if (x == 0)
 	{
 		y--;

@@ -30,7 +30,6 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     case 5:;
         // sys_draw_rectangle
-
         Rectangle *r = va_arg(args, Rectangle *);
         drawRectangle(r->color, r->up_l_x, r->up_l_y, r->lo_r_x, r->lo_r_y);
         break;
@@ -53,9 +52,8 @@ uint64_t syscallDispatcher(uint64_t id, ...)
         break;
     case 9:;
         // sys_play_sound
-
         uint64_t sound_ticks = va_arg(args, uint64_t);
-        uint64_t hz = va_arg(args, uint64_t); // hacer que no devuelva cero
+        uint64_t hz = va_arg(args, uint64_t);
         _sti();
         beep(hz, sound_ticks);
         _cli();
@@ -75,7 +73,6 @@ uint64_t syscallDispatcher(uint64_t id, ...)
 
 uint64_t read(FileDescriptor fd, char *buffer, uint64_t count)
 {
-    // @TODO: ver si volar el file descriptor
     unsigned char character;
     uint64_t i = 0;
     while (i < count && (character = nextFromBuffer()) != 0)

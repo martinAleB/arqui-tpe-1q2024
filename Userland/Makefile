@@ -17,15 +17,6 @@ sampleCodeModule:
 sampleDataModule:
 	printf "This is sample data." >> $(SAMPLE_DATA) && dd if=/dev/zero bs=1 count=1 >> $(SAMPLE_DATA)
 
-#$(USERLAND): $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS)
-#	$(LD) $(LDFLAGS) -T userland.ld -o $(USERLAND) $(OBJECTS) $(OBJECTS_C) $(OBJECTS_ASM)
-
-#%.o: %.c
-#	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
-
-#%.o : %.asm
-#	$(ASM) $(ASMFLAGS) $< -o $@
-
 clean:
 	cd SampleCodeModule; make clean
 	rm -rf *.bin
