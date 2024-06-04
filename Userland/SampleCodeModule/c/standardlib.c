@@ -129,7 +129,7 @@ static uint64_t fdprintfargs(FileDescriptor fd, const char *fmt, va_list args)
                     k = 0;
                     while (j < MAX_CHARS && s[k] != 0)
                         buffer[j++] = s[k++];
-                    i++; // para saltear el siguiente al %
+                    i++; // salteo la s
                     break;
                 case 'd':;
                     // Tengo que poner un valor entero con signo
@@ -138,7 +138,7 @@ static uint64_t fdprintfargs(FileDescriptor fd, const char *fmt, va_list args)
                     k = 0;
                     while (j < MAX_CHARS && numstr[k] != 0)
                         buffer[j++] = numstr[k++];
-                    i++; // salteo el siguiente al d
+                    i++; // salteo la d
                     break;
                 case 'u':;
                     // Tengo que poner un valor entero sin signo
@@ -147,7 +147,7 @@ static uint64_t fdprintfargs(FileDescriptor fd, const char *fmt, va_list args)
                     k = 0;
                     while (j < MAX_CHARS && numstr[k] != 0)
                         buffer[j++] = numstr[k++];
-                    i++; // salteo el siguiente al u
+                    i++; // salteo la u
                     break;
                 case 'c':;
                     // Tengo que poner un caracter

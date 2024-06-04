@@ -130,7 +130,7 @@ void play(Player *p1, Player *p2)
         }
 
     if (p2->playing)
-        move(p2); // pq en el juego original si se chocan gana p2
+        move(p2); // porque en el juego original si se chocan gana p2
     if (p1->playing)
         move(p1);
 }
@@ -186,8 +186,6 @@ void eliminator()
 
 void game()
 {
-
-    // PREGUNTAR VELOCIDAD Y TAMANO Y JUGADORES ANTES DE INICIALIZAR
     initPlayground();
     Player p1 = {START_X_OFFSET, START_Y_OFFSET, 0, PLAYER1_COLOR, RIGHT, RIGHT, PLAYING};
     Player p2 = {WIDTH - START_X_OFFSET, HEIGHT - START_Y_OFFSET, 0, PLAYER2_COLOR, LEFT, LEFT, p2Present ? PLAYING : NOT_PLAYING};

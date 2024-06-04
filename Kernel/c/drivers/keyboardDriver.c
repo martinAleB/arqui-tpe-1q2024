@@ -17,10 +17,9 @@
 #define R_SHIFT_PRESS 0x36
 #define R_SHIFT_RELEASE 0xB6
 #define CAPS_LOCK_PRESS 0x3A
-#define ALT_PRESS 0x3B // ALT PARA GUARDAR REGISTROS
+#define ALT_PRESS 0x3B
 #define ALT_RELEASE 0xB8
 
-// TODO
 #define CTRL_PRESS 0x1D
 #define CTRL_RELEASE 0x9D
 
@@ -85,7 +84,6 @@ static unsigned char keyValues[KEYS][2] = {
 	{' ', ' '},
 };
 
-// POR AHORA F1, ..., F12 no hacen nada.
 char isFKey(unsigned int key)
 {
 	return (key >= 0x3B && key <= 0x44) || key == 0x57 || key == 0x58;

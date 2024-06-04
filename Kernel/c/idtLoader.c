@@ -29,7 +29,7 @@ void load_idt()
   setup_IDT_entry(0x06, (uint64_t)&_exception06Handler);
   setup_IDT_entry(0x00, (uint64_t)&_exception00Handler);
 
-  // Solo interrupcion timer tick habilitadas
+  // Solo interrupcion timer tick y keyboard interrupt habilitadas
   picMasterMask(0xFC);
   picSlaveMask(0xFF);
 

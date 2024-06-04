@@ -8,16 +8,15 @@
 
 static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "test_zero_division", "test_invalid_opcode"};
 
-// @TODO: CAMBIAR COMANDO TEST_EXCEPTIONS POR COMANDOS DE INVALID OPCODE Y ZERO DIVISION
 static char *help_text = "A continuacion se muestran los comandos disponibles:\n\
-help --> Muestra todos los comandos disponibles a ejecutarse.\n\
-registers --> Muestra el estado de los registros actualmente o cuando se los guardo por ultima vez.\n\
-time --> Muestra la hora actual en formato hh:mm:ss.\n\
-eliminator --> Inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2.\n\
-echo [string] --> Imprime en pantalla el string pasado como argumento.\n\
-change_font --> Cambia el tamaño de la fuente actual.\n\
-test_zero_division --> Testea la excepcion de division por 0.\n\
-test_invalid_opcode --> Testea la excepcion de invalid opcode.";
+help --> Muestra todos los comandos disponibles a ejecutarse\n\
+registers --> Muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
+time --> Muestra la hora actual en formato hh:mm:ss\n\
+eliminator --> Inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2\n\
+echo [string] --> Imprime en pantalla el string pasado como argumento\n\
+change_font --> Cambia el tamano de la fuente actual\n\
+test_zero_division --> Testea la excepcion de division por 0\n\
+test_invalid_opcode --> Testea la excepcion de invalid opcode";
 
 typedef enum
 {
