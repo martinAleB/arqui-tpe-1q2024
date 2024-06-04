@@ -4,10 +4,9 @@
 
 #define CMD_MAX_CHARS 1000
 #define CMD_NAME_MAX_CHARS 100
-#define FUNCTION_NUM 8
 #define PROMPT "NanoShell $> "
 
-static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "clear", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode"};
+static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "clear", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode",0};
 
 static char *help_text = "Here's a list of all available commands:\n\
 - help --> Help display with all commands\n\
@@ -94,7 +93,9 @@ void startNanoShell()
             break;
 
         case NANO_SONG:
+            syscall(33,0,0,0);
             nanoAnthem();
+            clearScreen();
             break;
 
         case TEST_ZERO_DIVISION:
@@ -110,7 +111,7 @@ void startNanoShell()
             break;
         }
 
-        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR && interpretation != CLEAR)
+        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR && interpretation != CLEAR && interpretation != NANO_SONG)
         {
             printf("\n");
         }
@@ -128,7 +129,7 @@ static int interpret(char *command)
     }
     if (i == CMD_MAX_CHARS && command[i] != 0)
         return -1;
-    for (i = 0; i < FUNCTION_NUM; i++)
+    for (i = 0; instructions[i]!=0; i++)
     {
         if (strcmp(actualCommand, instructions[i]) == 0)
             return i;

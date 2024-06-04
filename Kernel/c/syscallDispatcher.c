@@ -11,6 +11,8 @@
 
 #define REGISTERS 18
 
+
+
 uint64_t syscallDispatcher(uint64_t id, ...)
 {
     va_list args;
@@ -65,6 +67,9 @@ uint64_t syscallDispatcher(uint64_t id, ...)
     case 11:;
         uint64_t *arr = va_arg(args, uint64_t *);
         ret = getRegBackup(arr);
+        break;
+    case 33:;
+        nanoFace();
         break;
     }
     va_end(args);

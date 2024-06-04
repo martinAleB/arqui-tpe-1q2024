@@ -15,5 +15,5 @@ uint64_t syscallDispatcher(uint64_t id, ...);
 uint64_t read(FileDescriptor fd, char *buffer, uint64_t count);
 uint64_t write(FileDescriptor fd, const char *buffer, uint64_t count);
 uint64_t getRegBackup(uint64_t *arr);
-
+void nanoFace();
 #endif

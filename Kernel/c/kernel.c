@@ -7,7 +7,6 @@
 #include <idtLoader.h>
 #include <nano.h>
 
-#define BOOT_SPLASH_SCREEN_LENGTH 100
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -22,6 +21,11 @@ static void *const sampleCodeModuleAddress = (void *)0x400000;
 static void *const sampleDataModuleAddress = (void *)0x500000;
 
 typedef int (*EntryPoint)();
+
+void nanoFace(){
+    for (int i = 0; i < _384_WIDTH * _384_HEIGHT; i++)
+		drawRectangle(_384[i], (i % _384_WIDTH) * 4, 4 * (i / _384_WIDTH), (i % _384_WIDTH + 1) * 4, 4 * (i / _384_WIDTH + 1));
+}
 
 void clearBSS(void *bssAddress, uint64_t bssSize)
 {
@@ -56,12 +60,6 @@ int main()
 	
 	setTickFrequency(120);
 
-	for (int i = 0; i < _384_WIDTH * _384_HEIGHT; i++)
-		drawRectangle(_384[i], (i % _384_WIDTH) * 4, 4 * (i / _384_WIDTH), (i % _384_WIDTH + 1) * 4, 4 * (i / _384_WIDTH + 1)); // putPixel (_384[i], i%_384_WIDTH, i/_384_WIDTH);
-	int currTicks = ticks_elapsed();
-	while (ticks_elapsed() - currTicks < BOOT_SPLASH_SCREEN_LENGTH)
-		;
-	vdClear();
 
 	((EntryPoint)sampleCodeModuleAddress)();
 
