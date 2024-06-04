@@ -42,7 +42,7 @@ void timer_wait(int ticks)
 void beep(uint16_t hz, uint16_t ticks)
 {
 	if(hz != 1)
-		play_sound(hz);// else play_sound(384);
+		play_sound(hz);
 	timer_wait(ticks);
 	nosound();
 }

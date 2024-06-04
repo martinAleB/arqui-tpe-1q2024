@@ -1,12 +1,13 @@
 #include <nanoshell.h>
 #include <standardlib.h>
+#include <videolib.h>
 
 #define CMD_MAX_CHARS 1000
 #define CMD_NAME_MAX_CHARS 100
 #define FUNCTION_NUM 8
 #define PROMPT "NanoShell $> "
 
-static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode"};
+static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "clear", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode"};
 
 static char *help_text = "Here's a list of all available commands:\n\
 - help --> Help display with all commands\n\
@@ -14,7 +15,8 @@ static char *help_text = "Here's a list of all available commands:\n\
 - time --> Displays time and date\n\
 - eliminator --> Starts the eliminator game\n\
 - echo [string] --> Prints the [string] argument in the display\n\
-- change_font --> Changes the actual font\n\
+- clear --> clears the display\n\
+- change_font --> Changes the current font\n\
 - nano_song --> Use command for a surprise\n\
 - test_zero_division --> Test for the Zero Division exception\n\
 - test_invalid_opcode --> Test for the Invalid Opcode exception";
@@ -26,6 +28,7 @@ typedef enum
     TIME,
     ELIMINATOR,
     ECHO,
+    CLEAR,
     CHANGE_FONT,
     NANO_SONG,
     TEST_ZERO_DIVISION,
@@ -81,6 +84,10 @@ void startNanoShell()
             toPrint[j] = 0;
             printf(toPrint);
             break;
+            
+        case CLEAR:
+            clearScreen();
+            break;
 
         case CHANGE_FONT:
             changeFontSize();
@@ -103,7 +110,7 @@ void startNanoShell()
             break;
         }
 
-        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR)
+        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR && interpretation != CLEAR)
         {
             printf("\n");
         }
