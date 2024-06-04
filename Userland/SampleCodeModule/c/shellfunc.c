@@ -94,13 +94,6 @@ void testInvalidOpcode()
 #define As6 1865
 #define B6  1976
 
-#define WHOLEN 320
-#define HALFN 160
-#define QUARTERN 80
-#define THREEQUARTERSN 60
-#define EIGHTHN 40
-#define SIXTEENTHN 20
-
 #define WHOLEN 288
 #define HALFN 144
 #define QUARTERN 72
