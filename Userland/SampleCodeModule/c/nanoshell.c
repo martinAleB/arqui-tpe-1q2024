@@ -6,17 +6,18 @@
 #define FUNCTION_NUM 8
 #define PROMPT "NanoShell $> "
 
-static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "test_zero_division", "test_invalid_opcode"};
+static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode"};
 
-static char *help_text = "A continuacion se muestran los comandos disponibles:\n\
-help --> Muestra todos los comandos disponibles a ejecutarse\n\
-registers --> Muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
-time --> Muestra la hora actual en formato hh:mm:ss\n\
-eliminator --> Inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2\n\
-echo [string] --> Imprime en pantalla el string pasado como argumento\n\
-change_font --> Cambia el tamano de la fuente actual\n\
-test_zero_division --> Testea la excepcion de division por 0\n\
-test_invalid_opcode --> Testea la excepcion de invalid opcode";
+static char *help_text = "Here's a list of all available commands:\n\
+- help --> Help display with all commands\n\
+- registers --> Displays the lastest backup of registers\n\
+- time --> Displays time and date\n\
+- eliminator --> Starts the eliminator game\n\
+- echo [string] --> Prints the [string] argument in the display\n\
+- change_font --> Changes the actual font\n\
+- nano_song --> Use command for a surprise\n\
+- test_zero_division --> Test for the Zero Division exception\n\
+- test_invalid_opcode --> Test for the Invalid Opcode exception";
 
 typedef enum
 {
@@ -26,6 +27,7 @@ typedef enum
     ELIMINATOR,
     ECHO,
     CHANGE_FONT,
+    NANO_SONG,
     TEST_ZERO_DIVISION,
     TEST_INVALID_OPCODE,
 } INSTRUCTION;
@@ -84,6 +86,10 @@ void startNanoShell()
             changeFontSize();
             break;
 
+        case NANO_SONG:
+            nanoAnthem();
+            break;
+
         case TEST_ZERO_DIVISION:
             testZeroDivision();
             break;
@@ -93,7 +99,7 @@ void startNanoShell()
             break;
 
         case -1:
-            printf("No se reconoce el comando: '%s'", cmdBuff);
+            printf("Command not found: '%s'", cmdBuff);
             break;
         }
 

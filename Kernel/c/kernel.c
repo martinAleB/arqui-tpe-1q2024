@@ -7,7 +7,7 @@
 #include <idtLoader.h>
 #include <nano.h>
 
-#define BOOT_SPLASH_SCREEN_LENGTH 33
+#define BOOT_SPLASH_SCREEN_LENGTH 100
 
 extern uint8_t text;
 extern uint8_t rodata;
