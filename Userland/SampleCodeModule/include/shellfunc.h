@@ -7,5 +7,6 @@ void startNanoShell();
 void printCurrentTime();
 void testZeroDivision();
 void testInvalidOpcode();
+void nanoAnthem();
 
 #endif

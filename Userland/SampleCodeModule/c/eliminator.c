@@ -207,7 +207,7 @@ void game()
     }
     else
     {
-        printf("P1 DEATHS : %d\n", p2wins);
+        printf("P1 DEATHS : %d\n", singlePlayerDeaths);
     }
     beep(192, 30);
     eliminator();

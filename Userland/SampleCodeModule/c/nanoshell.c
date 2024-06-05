@@ -1,22 +1,24 @@
 #include <nanoshell.h>
 #include <standardlib.h>
+#include <videolib.h>
 
 #define CMD_MAX_CHARS 1000
 #define CMD_NAME_MAX_CHARS 100
-#define FUNCTION_NUM 8
 #define PROMPT "NanoShell $> "
 
-static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "change_font", "test_zero_division", "test_invalid_opcode"};
+static char *instructions[] = {"help", "registers", "time", "eliminator", "echo", "clear", "change_font", "nano_song", "test_zero_division", "test_invalid_opcode",0};
 
-static char *help_text = "A continuacion se muestran los comandos disponibles:\n\
-help --> Muestra todos los comandos disponibles a ejecutarse\n\
-registers --> Muestra el estado de los registros actualmente o cuando se los guardo por ultima vez\n\
-time --> Muestra la hora actual en formato hh:mm:ss\n\
-eliminator --> Inicia una partida de 'eliminator'! Un juego muy divertido para jugar de a 1 o 2\n\
-echo [string] --> Imprime en pantalla el string pasado como argumento\n\
-change_font --> Cambia el tamano de la fuente actual\n\
-test_zero_division --> Testea la excepcion de division por 0\n\
-test_invalid_opcode --> Testea la excepcion de invalid opcode";
+static char *help_text = "Here's a list of all available commands:\n\
+- help --> Help display with all commands\n\
+- registers --> Displays the lastest backup of registers\n\
+- time --> Displays time and date\n\
+- eliminator --> Starts the eliminator game\n\
+- echo [string] --> Prints the [string] argument in the display\n\
+- clear --> clears the display\n\
+- change_font --> Changes the current font\n\
+- nano_song --> Use command for a surprise\n\
+- test_zero_division --> Test for the Zero Division exception\n\
+- test_invalid_opcode --> Test for the Invalid Opcode exception";
 
 typedef enum
 {
@@ -25,7 +27,9 @@ typedef enum
     TIME,
     ELIMINATOR,
     ECHO,
+    CLEAR,
     CHANGE_FONT,
+    NANO_SONG,
     TEST_ZERO_DIVISION,
     TEST_INVALID_OPCODE,
 } INSTRUCTION;
@@ -79,9 +83,19 @@ void startNanoShell()
             toPrint[j] = 0;
             printf(toPrint);
             break;
+            
+        case CLEAR:
+            clearScreen();
+            break;
 
         case CHANGE_FONT:
             changeFontSize();
+            break;
+
+        case NANO_SONG:
+            syscall(33,0,0,0);
+            nanoAnthem();
+            clearScreen();
             break;
 
         case TEST_ZERO_DIVISION:
@@ -93,11 +107,11 @@ void startNanoShell()
             break;
 
         case -1:
-            printf("No se reconoce el comando: '%s'", cmdBuff);
+            printf("Command not found: '%s'", cmdBuff);
             break;
         }
 
-        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR)
+        if (interpretation != CHANGE_FONT && interpretation != ELIMINATOR && interpretation != CLEAR && interpretation != NANO_SONG)
         {
             printf("\n");
         }
@@ -115,7 +129,7 @@ static int interpret(char *command)
     }
     if (i == CMD_MAX_CHARS && command[i] != 0)
         return -1;
-    for (i = 0; i < FUNCTION_NUM; i++)
+    for (i = 0; instructions[i]!=0; i++)
     {
         if (strcmp(actualCommand, instructions[i]) == 0)
             return i;
