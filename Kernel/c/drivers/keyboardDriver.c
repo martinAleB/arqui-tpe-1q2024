@@ -104,6 +104,7 @@ int registerPressed = 0;
 
 void writeIntoBuffer()
 {
+	
 	unsigned int key = getKeyPressed();
 
 	switch (key)

@@ -17,6 +17,8 @@ GLOBAL _irq60Handler
 GLOBAL _exception00Handler
 GLOBAL _exception06Handler
 
+GLOBAL getRipBackup
+
 EXTERN irqDispatcher
 EXTERN syscallDispatcher
 EXTERN exceptionDispatcher
@@ -63,6 +65,10 @@ SECTION .text
 %endmacro
 
 %macro irqHandlerMaster 1
+	push rdi
+	mov rdi, [rsp + 8]
+	mov [ripBackup], rdi
+	pop rdi
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
@@ -93,7 +99,8 @@ SECTION .text
 	mov [%1 + 13*8], r14
 	mov [%1 + 14*8], r15
 	mov [%1 + 15*8], rsp
-	mov rax, [rsp]    				;RIP
+	;mov rax, [rsp]    				;RIP --> CORREGIR
+	mov rax, [ripBackup]
     mov [%1 + 16*8], rax
     mov rax, [rsp+8]  				;RFLAGS
     mov [%1 + 17*8], rax
@@ -103,6 +110,10 @@ SECTION .text
 %endmacro
 
 %macro exceptionHandler 1
+	push rdi
+	mov rdi, [rsp + 8]
+	mov [ripBackup], rdi
+	pop rdi
 	saveRegistersMacro regsExcArr
 
 	pushState
@@ -218,9 +229,14 @@ haltcpu:
 	hlt
 	ret
 
+getRipBackup:
+	mov rax, [ripBackup]
+	ret
+
 section .rodata
 	userland equ 0x400000
 
 section .bss
 	aux resq 1
 	regsExcArr resb 144
+	ripBackup resb 8

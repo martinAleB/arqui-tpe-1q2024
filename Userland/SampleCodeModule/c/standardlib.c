@@ -59,6 +59,30 @@ static uint32_t unsigned_str_to_num(uint64_t *it, uint64_t buff_length, char *bu
     return num;
 }
 
+static void unsigned_num_to_hex_str(uint32_t num, char *buff)
+{
+    char hexDigits[] = "0123456789ABCDEF";
+    uint32_t i = 0;
+    if (num == 0)
+        buff[i++] = '0';
+    while (i < MAX_NUMBER_LENGTH - 1 && num > 0)
+    {
+        buff[i++] = hexDigits[num % 16];
+        num /= 16;
+    }
+    buff[i] = 0;
+    uint32_t revit = 0;
+    uint32_t revend = i - 1;
+    while (revit < revend)
+    {
+        char aux = buff[revit];
+        buff[revit] = buff[revend];
+        buff[revend] = aux;
+        revit++;
+        revend--;
+    }
+}
+
 static int32_t signed_str_to_num(uint64_t *it, uint64_t buff_length, char *buff)
 {
     int32_t mult = 1;
@@ -154,6 +178,15 @@ static uint64_t fdprintfargs(FileDescriptor fd, const char *fmt, va_list args)
                     int8_t c = va_arg(args, int);
                     buffer[j++] = c;
                     i++; // salteo la c
+                    break;
+                case 'x':;
+                    // Tengo que poner un valor entero en hexadecimal
+                    uint32_t x = va_arg(args, uint32_t);
+                    unsigned_num_to_hex_str(x, numstr);
+                    k = 0;
+                    while (j < MAX_CHARS && numstr[k] != 0)
+                        buffer[j++] = numstr[k++];
+                    i++; // salteo la x
                     break;
                 default:
                     // Si no es ninguno pongo el porcentaje
@@ -267,7 +300,7 @@ uint64_t scanf(const char *fmt, ...)
                     *char_dir = buffer[j++];
                     count_read++;
                     i++;
-                    break;
+                    break;    
                 }
             }
             i++;

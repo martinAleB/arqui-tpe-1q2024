@@ -41,7 +41,7 @@ static void printRegisters()
 		reg = regsStatus[i];
 		vdPrint(regName[i]);
 		vdPrintChar(' ');
-		vdPrintDec(reg);
+		vdPrintHex(reg);
 		vdNewline();
 	}
 }

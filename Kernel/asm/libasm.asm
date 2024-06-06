@@ -5,6 +5,7 @@ GLOBAL inb
 GLOBAL saveRegisters
 
 EXTERN makeBackup
+EXTERN getRipBackup
 
 section .text
 
@@ -24,9 +25,9 @@ section .text
 	mov [%1 + 12*8], r13
 	mov [%1 + 13*8], r14
 	mov [%1 + 14*8], r15
-	mov [%1 + 15*8], rsp
-	mov rax, [rsp]    				;RIP
-    mov [%1 + 16*8], rax
+	mov [%1 + 15*8], rsp			
+	call getRipBackup				;Obtener RIP
+    mov [%1 + 16*8], rax			;Escribir RIP
     mov rax, [rsp+8]  				;RFLAGS
     mov [%1 + 17*8], rax
 	

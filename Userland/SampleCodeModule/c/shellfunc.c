@@ -25,7 +25,7 @@ void getRegisters()
         for (int i = 0; i < REGISTERS; i++)
         {
             reg = regsStatus[i];
-            printf("\n%s %d", regName[i], reg);
+            printf("\n%s %x", regName[i], reg);
         }
     }
 }
